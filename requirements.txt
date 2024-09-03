@@ -1,0 +1,16 @@
+Flask
+Flask-SQLAlchemy
+Flask-Login
+Flask-WTF
+Flask-Migrate
+SQLAlchemy
+Werkzeug
+Jinja2
+MarkupSafe
+itsdangerous
+python-dotenv
+psycopg2-binary
+Pillow
+markdown
+bleach
+gunicorn
