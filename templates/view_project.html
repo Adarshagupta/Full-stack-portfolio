@@ -1,0 +1,281 @@
+{% extends "base.html" %}
+
+{% block title %}{{ project.title }} | Adarsh Gupta's Projects{% endblock %}
+{% block meta_description %}{{ project.description[:150]|striptags }}...{% endblock %}
+
+{% block og_title %}{{ project.title }} | Adarsh Gupta's Projects{% endblock %}
+{% block og_description %}{{ project.description[:150]|striptags }}...{% endblock %}
+
+{% block twitter_title %}{{ project.title }} | Adarsh Gupta's Projects{% endblock %}
+{% block twitter_description %}{{ project.description[:150]|striptags }}...{% endblock %}
+
+{% block content %}
+<div class="project-view">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                        <span>Table of Contents</span>
+                    </h5>
+                    <ul class="nav flex-column" id="toc">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#project-links">Project Links</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#tech-used">Tech Used</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#project-content">Project Content</a>
+                        </li>
+                        <!-- Dynamic content headings will be inserted here -->
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap align-items-center pt-3 pb-2 mb-3">
+                    <h1 class="h2">{{ project.title }}</h1>
+                    {% if current_user.is_authenticated %}
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="btn-group">
+                            <a href="{{ url_for('edit_project', project_id=project.id) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                            <a href="{{ url_for('delete_project', project_id=project.id) }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this project?')">Delete</a>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="project-card">
+                    {% if project.cover_image %}
+                    <div class="project-image-container mb-4">
+                        <img src="{{ url_for('static', filename='uploads/' + project.cover_image) }}" alt="{{ project.title }} cover image" class="img-fluid project-image">
+                    </div>
+                    {% endif %}
+                    <p class="text-muted">
+                        <time datetime="{{ project.created_at.isoformat() }}">Created on {{ project.created_at.strftime('%B %d, %Y') }}</time>
+                    </p>
+                    <div class="row">
+                        <div id="project-links" class="project-links col-md-6 mb-4">
+                            <h3>Project Links</h3>
+                            <div class="d-flex flex-wrap">
+                                {% if project.github_link %}
+                                <a href="{{ project.github_link }}" target="_blank" class="btn btn-outline-dark btn-sm me-2 mb-2">
+                                    <i class="fab fa-github"></i> GitHub
+                                </a>
+                                {% endif %}
+                                {% if project.twitter_link %}
+                                <a href="{{ project.twitter_link }}" target="_blank" class="btn btn-outline-primary btn-sm me-2 mb-2">
+                                    <i class="fab fa-twitter"></i> Twitter
+                                </a>
+                                {% endif %}
+                                {% if project.project_files_link %}
+                                <a href="{{ project.project_files_link }}" target="_blank" class="btn btn-outline-info btn-sm me-2 mb-2">
+                                    <i class="fas fa-file-alt"></i> Project Files
+                                </a>
+                                {% endif %}
+                                {% if project.research_link %}
+                                <a href="{{ project.research_link }}" target="_blank" class="btn btn-outline-success btn-sm mb-2">
+                                    <i class="fas fa-book"></i> Research
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div id="tech-used" class="project-tech-used col-md-6 mb-4">
+                            <h3>Tech Used</h3>
+                            <div class="tech-tags d-flex flex-wrap">
+                                {% for tech in project.get_tech_used_list() %}
+                                <span class="badge bg-secondary me-2 mb-2">{{ tech }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div id="project-content" class="project-content markdown-content">
+                        {{ project.render_description() | safe }}
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+        line-height: 1.6;
+    }
+    .project-view {
+        padding-top: 0rem;
+    }
+    .sidebar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 100;
+        padding: 48px 0 0;
+        box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+    }
+    .sidebar-sticky {
+        position: relative;
+        top: 0;
+        height: calc(100vh - 48px);
+        padding-top: .5rem;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+    .project-image-container {
+        max-height: 400px;
+        overflow: hidden;
+        border-radius: 8px;
+    }
+    .project-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .project-links .btn,
+    .tech-tags .badge {
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .project-content {
+        font-size: 1rem;
+        line-height: 1.8;
+        color: #444;
+    }
+    .markdown-content h2 {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        color: #333;
+    }
+    .markdown-content p {
+        margin-bottom: 1.5rem;
+    }
+    .markdown-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 1rem 0;
+    }
+    @media (max-width: 767.98px) {
+        .sidebar {
+            position: static;
+            height: auto;
+            padding-top: 0;
+        }
+        .sidebar-sticky {
+            height: auto;
+        }
+        .project-view {
+            padding-top: 1rem;
+        }
+        h1.h2 {
+            font-size: 1.5rem;
+        }
+        .project-links .btn,
+        .tech-tags .badge {
+            font-size: 0.8rem;
+        }
+    }
+
+    #toc .nav-link {
+        padding: 0.25rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    #toc .nav-link.active {
+        font-weight: bold;
+        color: #007bff;
+    }
+
+    #toc .nav-link-h2 {
+        padding-left: 2rem;
+    }
+
+    @media (min-width: 768px) {
+        .project-links,
+        .project-tech-used {
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        mermaid.init(undefined, ".mermaid");
+
+        // Generate table of contents
+        const toc = document.getElementById('toc');
+        const content = document.querySelector('.project-content');
+        const headings = content.querySelectorAll('h2');
+
+        headings.forEach((heading, index) => {
+            const id = `content-heading-${index}`;
+            heading.id = id;
+
+            const li = document.createElement('li');
+            li.className = 'nav-item';
+            const a = document.createElement('a');
+            a.className = 'nav-link nav-link-h2';
+            a.href = `#${id}`;
+            a.textContent = heading.textContent;
+            li.appendChild(a);
+            toc.appendChild(li);
+        });
+
+        // Highlight active section in TOC
+        const tocLinks = document.querySelectorAll('#toc .nav-link');
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.5
+        };
+
+        const observerCallback = (entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    tocLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${entry.target.id}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+        document.querySelectorAll('h2, h3').forEach(heading => {
+            observer.observe(heading);
+        });
+    });
+</script>
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Project",
+    "name": "{{ project.title }}",
+    "description": "{{ project.description[:150]|striptags }}...",
+    "datePublished": "{{ project.created_at.isoformat() }}",
+    "author": {
+        "@type": "Person",
+        "name": "Adarsh Gupta"
+    },
+    "url": "{{ url_for('view_project', project_id=project.id, _external=True) }}",
+    {% if project.github_link %}
+    "codeRepository": "{{ project.github_link }}",
+    {% endif %}
+    "keywords": "{{ project.tech_used }}",
+    "image": "{{ url_for('static', filename='uploads/' + project.cover_image, _external=True) if project.cover_image else '' }}"
+}
+</script>
+{% endblock %}

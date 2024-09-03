@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Adarsh Gupta | Software Developer{% endblock %}
+{% block meta_description %}Explore Adarsh Gupta's software development portfolio, featuring innovative projects and insightful blog posts on web development, AI, and more.{% endblock %}
+
+{% block content %}
+<div class="container">
+    <header class="text-center py-5">
+        <h1 class="display-4 mb-3">Adarsh Gupta</h1>
+        <p class="lead mb-4 text-muted">Software Developer | Web Enthusiast | AI Explorer</p>
+    </header>
+
+    <section id="about" class="py-5">
+        <h2 class="h3 mb-4 text-primary">About Me</h2>
+        <p class="lead">Hi, I'm Adarsh Gupta, a passionate software developer with expertise in web development, machine learning, and cloud technologies. I love solving complex problems and creating innovative solutions that make a difference.</p>
+    </section>
+
+    <section id="projects" class="py-5">
+        <h2 class="h3 mb-4 text-primary">Featured Projects</h2>
+        <div class="row g-4">
+            {% for project in projects %}
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h3 class="card-title h5">{{ project.title }}</h3>
+                        <p class="card-text text-muted">{{ project.description[:100] }}...</p>
+                        <a href="{{ url_for('view_project', project_id=project.id) }}" class="btn btn-outline-primary btn-sm">View Project</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section id="blog" class="py-5">
+        <h2 class="h3 mb-4 text-primary">Latest Blog Posts</h2>
+        <div class="row g-4">
+            {% for blog in blogs %}
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h3 class="card-title h5">{{ blog.title }}</h3>
+                        <p class="card-text text-muted small">
+                            <time datetime="{{ blog.created_at.isoformat() }}">{{ blog.created_at.strftime('%B %d, %Y') }}</time>
+                        </p>
+                        <p class="card-text">{{ blog.content[:100] }}...</p>
+                        <a href="{{ url_for('view_blog', blog_id=blog.id) }}" class="btn btn-outline-primary btn-sm">Read More</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section id="contact" class="py-5">
+        <h2 class="h3 mb-4 text-primary">Get in Touch</h2>
+        <form class="bg-light p-4 rounded shadow-sm">
+            <div class="mb-3">
+                <input type="text" class="form-control" placeholder="Your Name" required>
+            </div>
+            <div class="mb-3">
+                <input type="email" class="form-control" placeholder="Your Email" required>
+            </div>
+            <div class="mb-3">
+                <textarea class="form-control" rows="5" placeholder="Your Message" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Send Message</button>
+        </form>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        color: #333;
+        line-height: 1.6;
+        background-color: #f8f9fa;
+    }
+    h1, h2, h3 {
+        font-weight: 600;
+    }
+    .card {
+        transition: transform 0.3s ease-in-out;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    .btn-link {
+        text-decoration: none;
+    }
+    .form-control {
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+    }
+    .form-control:focus {
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        border-color: #80bdff;
+    }
+    .text-primary {
+        color: #007bff !important;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+    .btn-outline-primary {
+        color: #007bff;
+        border-color: #007bff;
+    }
+    .btn-outline-primary:hover {
+        background-color: #007bff;
+        color: #fff;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "name": "Adarsh Gupta - Developer Portfolio",
+    "url": "{{ request.url_root }}",
+    "potentialAction": {
+        "@type": "SearchAction",
+        "target": "{{ request.url_root }}search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{% if blog %}Edit{% else %}New{% endif %} Blog Post</h1>
+<form method="POST">
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" class="form-control" id="title" name="title" value="{{ blog.title if blog else '' }}" required>
+    </div>
+    <div class="form-group">
+        <label for="content">Content</label>
+        <textarea class="form-control" id="content" name="content" rows="10" required>{{ blog.content if blog else '' }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">{% if blog %}Update{% else %}Create{% endif %} Blog Post</button>
+</form>
+{% endblock %}

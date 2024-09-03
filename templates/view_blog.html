@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}{{ blog.title }} | Adarsh Gupta's Blog{% endblock %}
+{% block meta_description %}{{ blog.content[:150]|striptags }}...{% endblock %}
+
+{% block og_title %}{{ blog.title }} | Adarsh Gupta's Blog{% endblock %}
+{% block og_description %}{{ blog.content[:150]|striptags }}...{% endblock %}
+
+{% block twitter_title %}{{ blog.title }} | Adarsh Gupta's Blog{% endblock %}
+{% block twitter_description %}{{ blog.content[:150]|striptags }}...{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <article class="blog-post">
+                <h1 class="blog-post-title mb-4">{{ blog.title }}</h1>
+                <p class="blog-post-meta text-muted mb-4">
+                    <time datetime="{{ blog.created_at.isoformat() }}">Posted on {{ blog.created_at.strftime('%B %d, %Y') }}</time>
+                </p>
+                <div class="blog-post-content markdown-content">
+                    {{ blog.render_content() | safe }}
+                </div>
+            </article>
+            <div class="mt-5">
+                <a href="{{ url_for('home') }}" class="btn btn-outline-primary">&larr; Back to Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .blog-post-title {
+        font-size: 2.5rem;
+        color: #333;
+    }
+    .blog-post-content {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #444;
+    }
+    .markdown-content h2 {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+    .markdown-content p {
+        margin-bottom: 1.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        mermaid.init(undefined, ".mermaid");
+    });
+</script>
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "{{ blog.title }}",
+    "datePublished": "{{ blog.created_at.isoformat() }}",
+    "dateModified": "{{ blog.created_at.isoformat() }}",
+    "author": {
+        "@type": "Person",
+        "name": "Adarsh Gupta"
+    },
+    "description": "{{ blog.content[:150]|striptags }}...",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "{{ url_for('view_blog', blog_id=blog.id, _external=True) }}"
+    }
+}
+</script>
+{% endblock %}

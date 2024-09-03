@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>{% if project %}Edit{% else %}New{% endif %} Project</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" class="form-control" id="title" name="title" value="{{ project.title if project else '' }}" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="10" required>{{ project.description if project else '' }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="github_link">GitHub Link</label>
+            <input type="url" class="form-control" id="github_link" name="github_link" value="{{ project.github_link if project else '' }}">
+        </div>
+        <div class="form-group">
+            <label for="twitter_link">Twitter Link</label>
+            <input type="url" class="form-control" id="twitter_link" name="twitter_link" value="{{ project.twitter_link if project else '' }}">
+        </div>
+        <div class="form-group">
+            <label for="project_files_link">Project Files Link</label>
+            <input type="url" class="form-control" id="project_files_link" name="project_files_link" value="{{ project.project_files_link if project else '' }}">
+        </div>
+        <div class="form-group">
+            <label for="research_link">Research Link</label>
+            <input type="url" class="form-control" id="research_link" name="research_link" value="{{ project.research_link if project else '' }}">
+        </div>
+        <div class="form-group">
+            <label for="cover_image">Cover Image</label>
+            <input type="file" class="form-control-file" id="cover_image" name="cover_image">
+            {% if project and project.cover_image %}
+            <img src="{{ url_for('static', filename='uploads/' + project.cover_image) }}" alt="Current cover image" class="mt-2" style="max-width: 200px;">
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <label for="tech_used" class="form-label">Tech Used (comma-separated)</label>
+            <input type="text" class="form-control" id="tech_used" name="tech_used" value="{{ project.tech_used if project else '' }}">
+            <small class="form-text text-muted">Enter technologies used, separated by commas (e.g., Python, Flask, PostgreSQL)</small>
+        </div>
+        <button type="submit" class="btn btn-primary">{% if project %}Update{% else %}Create{% endif %} Project</button>
+    </form>
+</div>
+{% endblock %}

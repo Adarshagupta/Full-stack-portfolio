@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Admin Dashboard</h1>
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h2 class="h4 mb-0">Blogs</h2>
+                    <a href="{{ url_for('new_blog') }}" class="btn btn-light btn-sm">New Blog Post</a>
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for blog in blogs %}
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-1">{{ blog.title }}</h5>
+                                <p class="text-muted small mb-0">
+                                    {% if blog.created_at %}
+                                        {{ blog.created_at.strftime('%Y-%m-%d') }}
+                                    {% else %}
+                                        Date unknown
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="btn-group" role="group">
+                                <a href="{{ url_for('view_blog', blog_id=blog.id) }}" class="btn btn-outline-secondary btn-sm">View</a>
+                                <a href="{{ url_for('edit_blog', blog_id=blog.id) }}" class="btn btn-outline-primary btn-sm">Edit</a>
+                                <button type="button" class="btn btn-outline-danger btn-sm" onclick="confirmDelete('blog', {{ blog.id }})">Delete</button>
+                                <form id="archiveBlogForm{{ blog.id }}" action="{{ url_for('archive_blog', blog_id=blog.id) }}" method="POST" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-warning btn-sm">{% if blog.is_archived %}Unarchive{% else %}Archive{% endif %}</button>
+                                </form>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                    <h2 class="h4 mb-0">Projects</h2>
+                    <a href="{{ url_for('new_project') }}" class="btn btn-light btn-sm">New Project</a>
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for project in projects %}
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-1">{{ project.title }}</h5>
+                                <p class="text-muted">
+                                    {% if project.created_at %}
+                                        {{ project.created_at.strftime('%Y-%m-%d') }}
+                                    {% else %}
+                                        Date unknown
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="btn-group" role="group">
+                                <a href="{{ url_for('view_project', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm">View</a>
+                                <a href="{{ url_for('edit_project', project_id=project.id) }}" class="btn btn-outline-primary btn-sm">Edit</a>
+                                <button type="button" class="btn btn-outline-danger btn-sm" onclick="confirmDelete('project', {{ project.id }})">Delete</button>
+                                <form id="archiveProjectForm{{ project.id }}" action="{{ url_for('archive_project', project_id=project.id) }}" method="POST" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-warning btn-sm">{% if project.is_archived %}Unarchive{% else %}Archive{% endif %}</button>
+                                </form>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card {
+        border: none;
+        transition: transform 0.2s;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    .btn-group .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+    .list-group-item:hover {
+        background-color: #f8f9fa;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function confirmDelete(type, id) {
+        if (confirm(`Are you sure you want to delete this ${type}?`)) {
+            fetch(`/admin/${type}/delete/${id}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Error deleting item');
+                    }
+                });
+        }
+    }
+</script>
+{% endblock %}
