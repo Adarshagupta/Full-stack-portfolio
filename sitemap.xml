@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://full-stack-portfolio-hl3j.onrender.com/</loc>
     <changefreq>daily</changefreq>
@@ -7,20 +7,28 @@
   </url>
   <url>
     <loc>https://full-stack-portfolio-hl3j.onrender.com/blog/2</loc>
-    <lastmod>2024-09-03</lastmod>
+    <lastmod>2024-09-03T04:42:36.704348+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://full-stack-portfolio-hl3j.onrender.com/project/5</loc>
-    <lastmod>2024-09-03</lastmod>
+    <lastmod>2024-09-03T07:20:12.413479+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://full-stack-portfolio-hl3j.onrender.com/static/uploads/Screenshot_2024-08-12_231447.png</image:loc>
+      <image:caption>BookAI - 📚 AI Book Generator Documentation 📚</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://full-stack-portfolio-hl3j.onrender.com/project/4</loc>
-    <lastmod>2024-09-03</lastmod>
+    <lastmod>2024-09-03T05:54:49.150191+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://full-stack-portfolio-hl3j.onrender.com/static/uploads/simplepng.png</image:loc>
+      <image:caption>Cartonify - Generate best quality image in seconds</image:caption>
+    </image:image>
   </url>
 </urlset>

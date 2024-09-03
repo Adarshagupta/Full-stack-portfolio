@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 import os
 import markdown
 from datetime import datetime
+import pytz
 from markdown.preprocessors import Preprocessor
 from markdown.extensions import Extension
 from werkzeug.utils import secure_filename
@@ -23,7 +24,10 @@ UPLOAD_FOLDER = os.path.join(basedir, 'static', 'uploads')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
-app.config['SERVER_NAME'] = 'full-stack-portfolio-hl3j.onrender.com'  # Replace with your actual domain
+if os.environ.get('FLASK_ENV') == 'development':
+    app.config['SERVER_NAME'] = '127.0.0.1:5000'
+else:
+    app.config['SERVER_NAME'] = 'full-stack-portfolio-hl3j.onrender.com'  # Replace with your actual domain
 app.config['PREFERRED_URL_SCHEME'] = 'https'  # Or 'http' if you're not using HTTPS
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max-limit
@@ -335,35 +339,63 @@ def update_robots_txt():
 def update_sitemap():
     root = ET.Element("urlset")
     root.set("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9")
+    root.set("xmlns:xhtml", "http://www.w3.org/1999/xhtml")
+    root.set("xmlns:image", "http://www.google.com/schemas/sitemap-image/1.1")
 
     # Add home page
-    url = ET.SubElement(root, "url")
-    ET.SubElement(url, "loc").text = url_for('home', _external=True)
-    ET.SubElement(url, "changefreq").text = "daily"
-    ET.SubElement(url, "priority").text = "1.0"
+    add_url(root, url_for('home', _external=True), changefreq="daily", priority="1.0")
 
     # Add blog posts
-    blogs = Blog.query.filter_by(is_archived=False).all()
+    blogs = Blog.query.filter_by(is_archived=False).order_by(Blog.created_at.desc()).all()
     for blog in blogs:
-        url = ET.SubElement(root, "url")
-        ET.SubElement(url, "loc").text = url_for('view_blog', blog_id=blog.id, _external=True)
-        ET.SubElement(url, "lastmod").text = blog.created_at.strftime("%Y-%m-%d")
-        ET.SubElement(url, "changefreq").text = "weekly"
-        ET.SubElement(url, "priority").text = "0.8"
+        url = add_url(root, url_for('view_blog', blog_id=blog.id, _external=True),
+                      lastmod=blog.created_at,
+                      changefreq="weekly",
+                      priority="0.8")
+        
+        # Add blog post translations if available
+        # add_translations(url, 'view_blog', {'blog_id': blog.id})
 
     # Add projects
-    projects = Project.query.filter_by(is_archived=False).all()
+    projects = Project.query.filter_by(is_archived=False).order_by(Project.created_at.desc()).all()
     for project in projects:
-        url = ET.SubElement(root, "url")
-        ET.SubElement(url, "loc").text = url_for('view_project', project_id=project.id, _external=True)
-        ET.SubElement(url, "lastmod").text = project.created_at.strftime("%Y-%m-%d")
-        ET.SubElement(url, "changefreq").text = "monthly"
-        ET.SubElement(url, "priority").text = "0.7"
+        url = add_url(root, url_for('view_project', project_id=project.id, _external=True),
+                      lastmod=project.created_at,
+                      changefreq="monthly",
+                      priority="0.7")
+        
+        # Add project image
+        if project.cover_image:
+            image = ET.SubElement(url, "image:image")
+            ET.SubElement(image, "image:loc").text = url_for('static', filename=f'uploads/{project.cover_image}', _external=True)
+            ET.SubElement(image, "image:caption").text = project.title
+        
+        # Add project translations if available
+        # add_translations(url, 'view_project', {'project_id': project.id})
 
     # Save the sitemap
     xml_str = minidom.parseString(ET.tostring(root)).toprettyxml(indent="  ")
-    with open("sitemap.xml", "w") as f:
+    with open("sitemap.xml", "w", encoding="utf-8") as f:
         f.write(xml_str)
+
+def add_url(root, loc, lastmod=None, changefreq=None, priority=None):
+    url = ET.SubElement(root, "url")
+    ET.SubElement(url, "loc").text = loc
+    if lastmod:
+        ET.SubElement(url, "lastmod").text = lastmod.replace(tzinfo=pytz.UTC).isoformat()
+    if changefreq:
+        ET.SubElement(url, "changefreq").text = changefreq
+    if priority:
+        ET.SubElement(url, "priority").text = priority
+    return url
+
+# Uncomment and implement this function if you have multi-language support
+# def add_translations(url, endpoint, params):
+#     for lang in ['en', 'es', 'fr']:  # Add your supported languages
+#         alternate = ET.SubElement(url, "xhtml:link")
+#         alternate.set("rel", "alternate")
+#         alternate.set("hreflang", lang)
+#         alternate.set("href", url_for(endpoint, lang_code=lang, _external=True, **params))
 
 @app.route('/sitemap.xml')
 def sitemap():
