@@ -38,6 +38,17 @@
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <div class="d-flex justify-content-between flex-wrap align-items-center pt-3 pb-2 mb-3">
                     <h1 class="h2">{{ project.title }}</h1>
+                    <div class="dropdown">
+                        <button class="btn btn-link" type="button" id="shareDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-share-alt"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="shareDropdown">
+                            <li><a class="dropdown-item" href="https://twitter.com/intent/tweet?url={{ share_url }}&text={{ share_text }}" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i> Twitter</a></li>
+                            <li><a class="dropdown-item" href="https://www.linkedin.com/shareArticle?url={{ share_url }}&title={{ share_text }}" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                            <li><a class="dropdown-item" href="https://www.facebook.com/sharer/sharer.php?u={{ share_url }}" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook"></i> Facebook</a></li>
+                            <li><a class="dropdown-item" href="https://www.reddit.com/submit?url={{ share_url }}&title={{ share_text }}" target="_blank" rel="noopener noreferrer"><i class="fab fa-reddit"></i> Reddit</a></li>
+                        </ul>
+                    </div>
                     {% if current_user.is_authenticated %}
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <div class="btn-group">
@@ -100,6 +111,7 @@
         </div>
     </div>
 </div>
+
 {% endblock %}
 
 {% block extra_css %}
@@ -203,6 +215,11 @@
         .project-links,
         .project-tech-used {
         }
+    }
+    .dropdown-item i {
+        width: 20px;
+        text-align: center;
+        margin-right: 10px;
     }
 </style>
 {% endblock %}

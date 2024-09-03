@@ -14,7 +14,20 @@
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <article class="blog-post">
-                <h1 class="blog-post-title mb-4">{{ blog.title }}</h1>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="blog-post-title">{{ blog.title }}</h1>
+                    <div class="dropdown">
+                        <button class="btn btn-link" type="button" id="shareDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-share-alt"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="shareDropdown">
+                            <li><a class="dropdown-item" href="https://twitter.com/intent/tweet?url={{ share_url }}&text={{ share_text }}" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i> Twitter</a></li>
+                            <li><a class="dropdown-item" href="https://www.linkedin.com/shareArticle?url={{ share_url }}&title={{ share_text }}" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                            <li><a class="dropdown-item" href="https://www.facebook.com/sharer/sharer.php?u={{ share_url }}" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook"></i> Facebook</a></li>
+                            <li><a class="dropdown-item" href="https://www.reddit.com/submit?url={{ share_url }}&title={{ share_text }}" target="_blank" rel="noopener noreferrer"><i class="fab fa-reddit"></i> Reddit</a></li>
+                        </ul>
+                    </div>
+                </div>
                 <p class="blog-post-meta text-muted mb-4">
                     <time datetime="{{ blog.created_at.isoformat() }}">Posted on {{ blog.created_at.strftime('%B %d, %Y') }}</time>
                 </p>
@@ -48,6 +61,36 @@
     .markdown-content p {
         margin-bottom: 1.5rem;
     }
+    .social-share {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+}
+
+.social-share h3 {
+    margin-bottom: 10px;
+}
+
+.social-share a {
+    display: inline-block;
+    margin-right: 10px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 3px;
+}
+
+.social-share a:hover {
+    background-color: #0056b3;
+}
+
+.dropdown-item i {
+    width: 20px;
+    text-align: center;
+    margin-right: 10px;
+}
 </style>
 {% endblock %}
 

@@ -13,6 +13,7 @@ from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
+from urllib.parse import quote
 
 # Load environment variables
 load_dotenv()
@@ -24,10 +25,7 @@ UPLOAD_FOLDER = os.path.join(basedir, 'static', 'uploads')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
-if os.environ.get('FLASK_ENV') == 'development':
-    app.config['SERVER_NAME'] = '127.0.0.1:5000'
-else:
-    app.config['SERVER_NAME'] = 'full-stack-portfolio-hl3j.onrender.com'  # Replace with your actual domain
+app.config['SERVER_NAME'] = 'full-stack-portfolio-hl3j.onrender.com'  # Replace with your actual domain
 app.config['PREFERRED_URL_SCHEME'] = 'https'  # Or 'http' if you're not using HTTPS
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max-limit
@@ -293,12 +291,16 @@ def edit_blog(blog_id):
 @app.route('/blog/<int:blog_id>')
 def view_blog(blog_id):
     blog = Blog.query.get_or_404(blog_id)
-    return render_template('view_blog.html', blog=blog)
+    share_url = quote(url_for('view_blog', blog_id=blog.id, _external=True))
+    share_text = quote(f"Check out this blog post: {blog.title}")
+    return render_template('view_blog.html', blog=blog, share_url=share_url, share_text=share_text)
 
 @app.route('/project/<int:project_id>')
 def view_project(project_id):
     project = Project.query.get_or_404(project_id)
-    return render_template('view_project.html', project=project)
+    share_url = quote(url_for('view_project', project_id=project.id, _external=True))
+    share_text = quote(f"Check out this project: {project.title}")
+    return render_template('view_project.html', project=project, share_url=share_url, share_text=share_text)
 
 def create_admin_user():
     admin_username = os.getenv('ADMIN_USERNAME')
