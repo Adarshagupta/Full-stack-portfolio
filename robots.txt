@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://full-stack-portfolio-hl3j.onrender.com/sitemap.xml

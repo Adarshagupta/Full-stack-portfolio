@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, send_file
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -10,6 +10,8 @@ from markdown.preprocessors import Preprocessor
 from markdown.extensions import Extension
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
+import xml.etree.ElementTree as ET
+from xml.dom import minidom
 
 # Load environment variables
 load_dotenv()
@@ -21,6 +23,8 @@ UPLOAD_FOLDER = os.path.join(basedir, 'static', 'uploads')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
+app.config['SERVER_NAME'] = 'full-stack-portfolio-hl3j.onrender.com'  # Replace with your actual domain
+app.config['PREFERRED_URL_SCHEME'] = 'https'  # Or 'http' if you're not using HTTPS
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max-limit
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
@@ -136,6 +140,8 @@ def new_blog():
         new_blog = Blog(title=title, content=content, author_id=current_user.id)
         db.session.add(new_blog)
         db.session.commit()
+        update_robots_txt()
+        update_sitemap()
         flash('Blog post created successfully', 'success')
         return redirect(url_for('admin_dashboard'))
     return render_template('new_blog.html')
@@ -183,6 +189,8 @@ def new_project():
         try:
             db.session.add(new_project)
             db.session.commit()
+            update_robots_txt()
+            update_sitemap()
             flash('Project created successfully', 'success')
             return redirect(url_for('admin_dashboard'))
         except Exception as e:
@@ -220,6 +228,7 @@ def edit_project(project_id):
                     print(f'Error saving file: {str(e)}')
         
         db.session.commit()
+        update_sitemap()
         flash('Project updated successfully', 'success')
         return redirect(url_for('admin_dashboard'))
     return render_template('new_project.html', project=project)
@@ -239,6 +248,7 @@ def archive_blog(blog_id):
     blog = Blog.query.get_or_404(blog_id)
     blog.is_archived = not blog.is_archived
     db.session.commit()
+    update_sitemap()
     action = 'archived' if blog.is_archived else 'unarchived'
     flash(f'Blog post {action} successfully', 'success')
     return redirect(url_for('admin_dashboard'))
@@ -258,6 +268,7 @@ def archive_project(project_id):
     project = Project.query.get_or_404(project_id)
     project.is_archived = not project.is_archived
     db.session.commit()
+    update_sitemap()
     action = 'archived' if project.is_archived else 'unarchived'
     flash(f'Project {action} successfully', 'success')
     return redirect(url_for('admin_dashboard'))
@@ -270,6 +281,7 @@ def edit_blog(blog_id):
         blog.title = request.form.get('title')
         blog.content = request.form.get('content')
         db.session.commit()
+        update_sitemap()
         flash('Blog post updated successfully', 'success')
         return redirect(url_for('admin_dashboard'))
     return render_template('new_blog.html', blog=blog)
@@ -314,6 +326,75 @@ def update_existing_projects():
         db.session.commit()
         print(f"Updated {len(projects_without_date)} projects with creation dates.")
 
+def update_robots_txt():
+    with open('robots.txt', 'w') as f:
+        f.write("User-agent: *\n")
+        f.write("Disallow:\n\n")
+        f.write(f"Sitemap: {url_for('sitemap', _external=True)}\n")
+
+def update_sitemap():
+    root = ET.Element("urlset")
+    root.set("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9")
+
+    # Add home page
+    url = ET.SubElement(root, "url")
+    ET.SubElement(url, "loc").text = url_for('home', _external=True)
+    ET.SubElement(url, "changefreq").text = "daily"
+    ET.SubElement(url, "priority").text = "1.0"
+
+    # Add blog posts
+    blogs = Blog.query.filter_by(is_archived=False).all()
+    for blog in blogs:
+        url = ET.SubElement(root, "url")
+        ET.SubElement(url, "loc").text = url_for('view_blog', blog_id=blog.id, _external=True)
+        ET.SubElement(url, "lastmod").text = blog.created_at.strftime("%Y-%m-%d")
+        ET.SubElement(url, "changefreq").text = "weekly"
+        ET.SubElement(url, "priority").text = "0.8"
+
+    # Add projects
+    projects = Project.query.filter_by(is_archived=False).all()
+    for project in projects:
+        url = ET.SubElement(root, "url")
+        ET.SubElement(url, "loc").text = url_for('view_project', project_id=project.id, _external=True)
+        ET.SubElement(url, "lastmod").text = project.created_at.strftime("%Y-%m-%d")
+        ET.SubElement(url, "changefreq").text = "monthly"
+        ET.SubElement(url, "priority").text = "0.7"
+
+    # Save the sitemap
+    xml_str = minidom.parseString(ET.tostring(root)).toprettyxml(indent="  ")
+    with open("sitemap.xml", "w") as f:
+        f.write(xml_str)
+
+@app.route('/sitemap.xml')
+def sitemap():
+    return send_file('sitemap.xml')
+
+@app.route('/api/posts')
+def api_posts():
+    blogs = Blog.query.filter_by(is_archived=False).all()
+    projects = Project.query.filter_by(is_archived=False).all()
+    
+    posts = []
+    for blog in blogs:
+        posts.append({
+            'type': 'blog',
+            'id': blog.id,
+            'title': blog.title,
+            'created_at': blog.created_at.isoformat(),
+            'url': url_for('view_blog', blog_id=blog.id, _external=True)
+        })
+    
+    for project in projects:
+        posts.append({
+            'type': 'project',
+            'id': project.id,
+            'title': project.title,
+            'created_at': project.created_at.isoformat(),
+            'url': url_for('view_project', project_id=project.id, _external=True)
+        })
+    
+    return jsonify(posts)
+
 if __name__ == '__main__':
     with app.app_context():
         if not os.path.exists(app.config['UPLOAD_FOLDER']):
@@ -322,4 +403,6 @@ if __name__ == '__main__':
         create_admin_user()
         update_existing_blogs()
         update_existing_projects()
-    app.run(debug=True)
+        update_robots_txt()
+        update_sitemap()
+    app.run(host='127.0.0.1', port=5000, debug=True)
