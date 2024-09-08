@@ -14,6 +14,7 @@ from dotenv import load_dotenv
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 from urllib.parse import quote
+from sqlalchemy import or_
 
 # Load environment variables
 load_dotenv()
@@ -518,6 +519,60 @@ def api_posts():
         })
     
     return jsonify(posts)
+
+@app.route('/advanced-search')
+def advanced_search():
+    query = request.args.get('query', '')
+    category = request.args.get('category', '')
+    tags = request.args.get('tags', '').split(',') if request.args.get('tags') else []
+    date_from = request.args.get('date_from', '')
+    date_to = request.args.get('date_to', '')
+
+    # Base query
+    results = []
+
+    if category == 'projects' or category == '':
+        project_query = Project.query.filter_by(is_archived=False)
+        if query:
+            project_query = project_query.filter(or_(
+                Project.title.ilike(f'%{query}%'),
+                Project.description.ilike(f'%{query}%')
+            ))
+        if tags:
+            project_query = project_query.filter(Project.tech_used.ilike(f'%{tag}%') for tag in tags)
+        if date_from:
+            project_query = project_query.filter(Project.created_at >= datetime.strptime(date_from, '%Y-%m-%d'))
+        if date_to:
+            project_query = project_query.filter(Project.created_at <= datetime.strptime(date_to, '%Y-%m-%d'))
+        results.extend(project_query.all())
+
+    if category == 'blog' or category == '':
+        blog_query = Blog.query.filter_by(is_archived=False)
+        if query:
+            blog_query = blog_query.filter(or_(
+                Blog.title.ilike(f'%{query}%'),
+                Blog.content.ilike(f'%{query}%')
+            ))
+        if date_from:
+            blog_query = blog_query.filter(Blog.created_at >= datetime.strptime(date_from, '%Y-%m-%d'))
+        if date_to:
+            blog_query = blog_query.filter(Blog.created_at <= datetime.strptime(date_to, '%Y-%m-%d'))
+        results.extend(blog_query.all())
+
+    if category == 'research' or category == '':
+        research_query = Research.query.filter_by(is_archived=False)
+        if query:
+            research_query = research_query.filter(or_(
+                Research.title.ilike(f'%{query}%'),
+                Research.content.ilike(f'%{query}%')
+            ))
+        if date_from:
+            research_query = research_query.filter(Research.created_at >= datetime.strptime(date_from, '%Y-%m-%d'))
+        if date_to:
+            research_query = research_query.filter(Research.created_at <= datetime.strptime(date_to, '%Y-%m-%d'))
+        results.extend(research_query.all())
+
+    return render_template('advanced_search_results.html', results=results, query=query)
 
 if __name__ == '__main__':
     with app.app_context():

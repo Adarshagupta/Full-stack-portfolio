@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Advanced Search Results</h1>
+    <p>Showing results for: {{ query }}</p>
+
+    {% if results %}
+        <div class="row">
+        {% for result in results %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ result.title }}</h5>
+                        <p class="card-text">
+                            {% if result.__tablename__ == 'project' %}
+                                {{ result.description[:100] }}...
+                            {% elif result.__tablename__ == 'blog' %}
+                                {{ result.content[:100] }}...
+                            {% elif result.__tablename__ == 'research' %}
+                                {{ result.content[:100] }}...
+                            {% endif %}
+                        </p>
+                        <p class="card-text"><small class="text-muted">Type: {{ result.__tablename__ }}</small></p>
+                        {% if result.__tablename__ == 'project' %}
+                            <a href="{{ url_for('view_project', project_id=result.id) }}" class="btn btn-primary">View Details</a>
+                        {% elif result.__tablename__ == 'blog' %}
+                            <a href="{{ url_for('view_blog', blog_id=result.id) }}" class="btn btn-primary">View Details</a>
+                        {% elif result.__tablename__ == 'research' %}
+                            <a href="{{ url_for('view_research', research_id=result.id) }}" class="btn btn-primary">View Details</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+</div>
+{% endblock %}
