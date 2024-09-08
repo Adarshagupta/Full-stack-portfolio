@@ -25,7 +25,7 @@ UPLOAD_FOLDER = os.path.join(basedir, 'static', 'uploads')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
-app.config['SERVER_NAME'] = '1https://full-stack-portfolio-hl3j.onrender.com/'  # Replace with your actual domain
+app.config['SERVER_NAME'] = 'https://full-stack-portfolio-hl3j.onrender.com/'  # Replace with your actual domain
 app.config['PREFERRED_URL_SCHEME'] = 'https'  # Or 'http' if you're not using HTTPS
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max-limit
