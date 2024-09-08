@@ -6,8 +6,8 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://127.0.0.1:5000/blog/2</loc>
-    <lastmod>2024-09-03T04:42:36.704348+00:00</lastmod>
+    <loc>https://127.0.0.1:5000/blog/8</loc>
+    <lastmod>2024-09-07T09:41:09.668889+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -30,5 +30,11 @@
       <image:loc>https://127.0.0.1:5000/static/uploads/simplepng.png</image:loc>
       <image:caption>Cartonify - Generate best quality image in seconds</image:caption>
     </image:image>
+  </url>
+  <url>
+    <loc>https://127.0.0.1:5000/research/1</loc>
+    <lastmod>2024-09-03T16:32:40.748235+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 </urlset>

@@ -25,7 +25,7 @@ UPLOAD_FOLDER = os.path.join(basedir, 'static', 'uploads')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
-app.config['SERVER_NAME'] = 'full-stack-portfolio-hl3j.onrender.com'  # Replace with your actual domain
+app.config['SERVER_NAME'] = '127.0.0.1:5000'  # Replace with your actual domain
 app.config['PREFERRED_URL_SCHEME'] = 'https'  # Or 'http' if you're not using HTTPS
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max-limit
@@ -98,6 +98,17 @@ class Project(db.Model):
     def get_tech_used_list(self):
         return [tech.strip() for tech in self.tech_used.split(',')] if self.tech_used else []
 
+class Research(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    is_archived = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def render_content(self):
+        return markdown.markdown(self.content, extensions=['fenced_code', MermaidExtension()])
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -131,7 +142,8 @@ def logout():
 def admin_dashboard():
     blogs = Blog.query.all()
     projects = Project.query.all()
-    return render_template('admin_dashboard.html', blogs=blogs, projects=projects)
+    research_items = Research.query.all()
+    return render_template('admin_dashboard.html', blogs=blogs, projects=projects, research_items=research_items)
 
 @app.route('/admin/blog/new', methods=['GET', 'POST'])
 @login_required
@@ -302,6 +314,66 @@ def view_project(project_id):
     share_text = quote(f"Check out this project: {project.title}")
     return render_template('view_project.html', project=project, share_url=share_url, share_text=share_text)
 
+@app.route('/research')
+def research():
+    research_items = Research.query.filter_by(is_archived=False).order_by(Research.created_at.desc()).all()
+    return render_template('research.html', research_items=research_items)
+
+@app.route('/admin/research/new', methods=['GET', 'POST'])
+@login_required
+def new_research():
+    if request.method == 'POST':
+        title = request.form.get('title')
+        content = request.form.get('content')
+        new_research = Research(title=title, content=content, author_id=current_user.id)
+        db.session.add(new_research)
+        db.session.commit()
+        update_robots_txt()
+        update_sitemap()
+        flash('Research item created successfully', 'success')
+        return redirect(url_for('admin_dashboard'))
+    return render_template('new_research.html')
+
+@app.route('/admin/research/<int:research_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_research(research_id):
+    research = Research.query.get_or_404(research_id)
+    if request.method == 'POST':
+        research.title = request.form.get('title')
+        research.content = request.form.get('content')
+        db.session.commit()
+        update_sitemap()
+        flash('Research item updated successfully', 'success')
+        return redirect(url_for('admin_dashboard'))
+    return render_template('new_research.html', research=research)
+
+@app.route('/admin/research/<int:research_id>/delete', methods=['POST'])
+@login_required
+def delete_research(research_id):
+    research = Research.query.get_or_404(research_id)
+    db.session.delete(research)
+    db.session.commit()
+    flash('Research item deleted successfully', 'success')
+    return redirect(url_for('admin_dashboard'))
+
+@app.route('/admin/research/<int:research_id>/archive', methods=['POST'])
+@login_required
+def archive_research(research_id):
+    research = Research.query.get_or_404(research_id)
+    research.is_archived = not research.is_archived
+    db.session.commit()
+    update_sitemap()
+    action = 'archived' if research.is_archived else 'unarchived'
+    flash(f'Research item {action} successfully', 'success')
+    return redirect(url_for('admin_dashboard'))
+
+@app.route('/research/<int:research_id>')
+def view_research(research_id):
+    research = Research.query.get_or_404(research_id)
+    share_url = quote(url_for('view_research', research_id=research.id, _external=True))
+    share_text = quote(f"Check out this research: {research.title}")
+    return render_template('view_research.html', research=research, share_url=share_url, share_text=share_text)
+
 def create_admin_user():
     admin_username = os.getenv('ADMIN_USERNAME')
     admin_password = os.getenv('ADMIN_PASSWORD')
@@ -375,6 +447,14 @@ def update_sitemap():
         # Add project translations if available
         # add_translations(url, 'view_project', {'project_id': project.id})
 
+    # Add research items
+    research_items = Research.query.filter_by(is_archived=False).order_by(Research.created_at.desc()).all()
+    for research in research_items:
+        url = add_url(root, url_for('view_research', research_id=research.id, _external=True),
+                      lastmod=research.created_at,
+                      changefreq="monthly",
+                      priority="0.7")
+
     # Save the sitemap
     xml_str = minidom.parseString(ET.tostring(root)).toprettyxml(indent="  ")
     with open("sitemap.xml", "w", encoding="utf-8") as f:
@@ -407,6 +487,7 @@ def sitemap():
 def api_posts():
     blogs = Blog.query.filter_by(is_archived=False).all()
     projects = Project.query.filter_by(is_archived=False).all()
+    research_items = Research.query.filter_by(is_archived=False).all()
     
     posts = []
     for blog in blogs:
@@ -425,6 +506,15 @@ def api_posts():
             'title': project.title,
             'created_at': project.created_at.isoformat(),
             'url': url_for('view_project', project_id=project.id, _external=True)
+        })
+    
+    for research in research_items:
+        posts.append({
+            'type': 'research',
+            'id': research.id,
+            'title': research.title,
+            'created_at': research.created_at.isoformat(),
+            'url': url_for('view_research', research_id=research.id, _external=True)
         })
     
     return jsonify(posts)

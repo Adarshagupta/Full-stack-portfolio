@@ -27,37 +27,87 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333;
+            --navbar-bg: #f8f9fa;
+            --navbar-border: #e9ecef;
+            --link-color: #007bff;
+            --footer-bg: #f8f9fa;
+            --content-bg: #ffffff;
+        }
+        
+        body.dark-mode {
+            --bg-color: #1a1a1a;
+            --text-color: #f0f0f0;
+            --navbar-bg: #2c2c2c;
+            --navbar-border: #444;
+            --link-color: #4da3ff;
+            --footer-bg: #2c2c2c;
+            --content-bg: #2c2c2c;
+        }
+
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #ffffff;
-            color: #333;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
         }
         .navbar {
-            background-color: #f8f9fa;
-            border-bottom: 1px solid #e9ecef;
+            background-color: var(--navbar-bg);
+            border-bottom: 1px solid var(--navbar-border);
         }
         .navbar-brand {
             font-weight: bold;
-            color: #007bff;
+            color: var(--link-color) !important;
         }
         .nav-link {
-            color: #333;
+            color: var(--text-color) !important;
             transition: color 0.3s ease;
         }
         .nav-link:hover {
-            color: #007bff;
-        }
-        .content-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
+            color: var(--link-color) !important;
         }
         .footer {
-            background-color: #f8f9fa;
-            color: #333;
-            padding: 1rem 0;
-            margin-top: 2rem;
-            border-top: 1px solid #e9ecef;
+            background-color: var(--footer-bg);
+            color: var(--text-color);
+            border-top: 1px solid var(--navbar-border);
+        }
+        .content-wrapper {
+            background-color: var(--content-bg);
+            color: var(--text-color);
+        }
+        .card {
+            background-color: var(--content-bg);
+            color: var(--text-color);
+            border-color: var(--navbar-border);
+        }
+        .alert {
+            background-color: var(--content-bg);
+            color: var(--text-color);
+            border-color: var(--navbar-border);
+        }
+        a {
+            color: var(--link-color);
+        }
+        /* Add these new styles */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        .research-content img,
+        .blog-content img,
+        .project-content img {
+            display: block;
+            margin: 1em auto;
+        }
+        .dark-mode-toggle {
+            cursor: pointer;
+            padding: 5px 10px;
+            background-color: var(--navbar-bg);
+            border: 1px solid var(--navbar-border);
+            color: var(--text-color);
+            border-radius: 5px;
         }
     </style>
     {% block extra_css %}{% endblock %}
@@ -94,6 +144,14 @@
                             <a class="nav-link" href="{{ url_for('login') }}">Login</a>
                         </li>
                     {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('research') }}">Research</a>
+                    </li>
+                    <li class="nav-item">
+                        <button id="darkModeToggle" class="dark-mode-toggle">
+                            <i class="fas fa-moon"></i> Toggle Dark Mode
+                        </button>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -120,6 +178,29 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         mermaid.initialize({startOnLoad:true});
+    </script>
+    <script>
+        // Dark mode toggle functionality
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.body;
+        const icon = darkModeToggle.querySelector('i');
+
+        // Check for saved dark mode preference
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            body.classList.add('dark-mode');
+            icon.classList.replace('fa-moon', 'fa-sun');
+        }
+
+        darkModeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('darkMode', 'enabled');
+                icon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                localStorage.setItem('darkMode', null);
+                icon.classList.replace('fa-sun', 'fa-moon');
+            }
+        });
     </script>
     {% block extra_js %}{% endblock %}
     

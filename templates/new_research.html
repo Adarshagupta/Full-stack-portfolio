@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{% if research %}Edit Research{% else %}New Research{% endif %}</h1>
+
+<form method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" class="form-control" id="title" name="title" required value="{{ research.title if research else '' }}">
+    </div>
+    <div class="form-group">
+        <label for="content">Content</label>
+        <textarea class="form-control" id="content" name="content" rows="10" required>{{ research.content if research else '' }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">{% if research %}Update{% else %}Create{% endif %} Research</button>
+</form>
+
+<script>
+    // You can add a rich text editor here if desired, similar to the blog post editor
+</script>
+{% endblock %}
