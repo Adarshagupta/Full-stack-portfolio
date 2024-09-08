@@ -140,6 +140,7 @@ def logout():
 @app.route('/admin')
 @login_required
 def admin_dashboard():
+    print("Admin dashboard function called")  # Add this line
     blogs = Blog.query.all()
     projects = Project.query.all()
     research_items = Research.query.all()
@@ -529,4 +530,4 @@ if __name__ == '__main__':
         update_existing_projects()
         update_robots_txt()
         update_sitemap()
-    app.run(host='127.0.0.1', port=5000, debug=True)
+    app.run(port=5000, debug=True)
