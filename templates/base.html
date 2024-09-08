@@ -169,8 +169,22 @@
         {% block content %}{% endblock %}
     </div>
 
-    <footer class="footer text-center">
+    <footer class="footer text-center py-3">
         <div class="container">
+            <div class="mb-2">
+                <a href="https://x.com/Adarshgpt_" target="_blank" rel="noopener noreferrer" class="text-decoration-none me-3">
+                    <i class="fab fa-twitter fa-lg"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/adasgpt/" target="_blank" rel="noopener noreferrer" class="text-decoration-none me-3">
+                    <i class="fab fa-linkedin fa-lg"></i>
+                </a>
+                <a href="https://github.com/Adarshagupta" target="_blank" rel="noopener noreferrer" class="text-decoration-none me-3">
+                    <i class="fab fa-github fa-lg"></i>
+                </a>
+                <a href="{{ url_for('sitemap') }}" target="_blank" rel="noopener noreferrer" class="text-decoration-none">
+                    <i class="fas fa-rss fa-lg"></i>
+                </a>
+            </div>
             <span>&copy; 2023 Adarsh Gupta. All rights reserved.</span>
         </div>
     </footer>

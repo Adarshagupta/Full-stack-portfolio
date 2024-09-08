@@ -6,25 +6,39 @@
 {% block content %}
 <div class="container">
     <header class="text-center py-5">
-        <h1 class="display-4 mb-3">Adarsh Gupta</h1>
+        <h1 class="display-3 mb-3 fw-bold">Adarsh Gupta</h1>
         <p class="lead mb-4 text-muted">Software Developer | Web Enthusiast | AI Explorer</p>
+        <div class="social-icons mb-4">
+            <a href="https://x.com/Adarshgpt_" target="_blank" rel="noopener noreferrer" class="me-3">
+                <i class="fab fa-twitter fa-lg"></i>
+            </a>
+            <a href="https://github.com/Adarshagupta" target="_blank" rel="noopener noreferrer" class="me-3">
+                <i class="fab fa-github fa-lg"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/adasgpt/" target="_blank" rel="noopener noreferrer" class="me-3">
+                <i class="fab fa-linkedin fa-lg"></i>
+            </a>
+            <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer">
+                <i class="fas fa-rss fa-lg"></i>
+            </a>
+        </div>
     </header>
 
     <section id="about" class="py-5">
-        <h2 class="h3 mb-4 text-primary">About Me</h2>
+        <h2 class="h2 mb-4 text-primary">About Me</h2>
         <p class="lead">Hi, I'm Adarsh Gupta, a passionate software developer with expertise in web development, machine learning, and cloud technologies. I love solving complex problems and creating innovative solutions that make a difference.</p>
     </section>
 
     <section id="projects" class="py-5">
-        <h2 class="h3 mb-4 text-primary">Featured Projects</h2>
+        <h2 class="h2 mb-4 text-primary">Featured Projects</h2>
         <div class="row g-4">
             {% for project in projects %}
             <div class="col-md-4">
-                <div class="card h-100 shadow-sm">
+                <div class="card h-100 shadow-sm border-0">
                     <div class="card-body">
                         <h3 class="card-title h5">{{ project.title }}</h3>
                         <p class="card-text text-muted">{{ project.description[:100] }}...</p>
-                        <a href="{{ url_for('view_project', project_id=project.id) }}" class="btn btn-outline-primary btn-sm">View Project</a>
+                        <a href="{{ url_for('view_project', project_id=project.id) }}" class="btn btn-outline-primary btn-sm stretched-link">View Project</a>
                     </div>
                 </div>
             </div>
@@ -33,18 +47,18 @@
     </section>
 
     <section id="blog" class="py-5">
-        <h2 class="h3 mb-4 text-primary">Latest Blog Posts</h2>
+        <h2 class="h2 mb-4 text-primary">Latest Blog Posts</h2>
         <div class="row g-4">
             {% for blog in blogs %}
             <div class="col-md-4">
-                <div class="card h-100 shadow-sm">
+                <div class="card h-100 shadow-sm border-0">
                     <div class="card-body">
                         <h3 class="card-title h5">{{ blog.title }}</h3>
                         <p class="card-text text-muted small">
                             <time datetime="{{ blog.created_at.isoformat() }}">{{ blog.created_at.strftime('%B %d, %Y') }}</time>
                         </p>
                         <p class="card-text">{{ blog.content[:100] }}...</p>
-                        <a href="{{ url_for('view_blog', blog_id=blog.id) }}" class="btn btn-outline-primary btn-sm">Read More</a>
+                        <a href="{{ url_for('view_blog', blog_id=blog.id) }}" class="btn btn-outline-primary btn-sm stretched-link">Read More</a>
                     </div>
                 </div>
             </div>
@@ -53,8 +67,8 @@
     </section>
 
     <section id="contact" class="py-5">
-        <h2 class="h3 mb-4 text-primary">Get in Touch</h2>
-        <form class="bg-light p-4 rounded shadow-sm">
+        <h2 class="h2 mb-4 text-primary">Get in Touch</h2>
+        <form class="bg-white p-4 rounded shadow-sm">
             <div class="mb-3">
                 <input type="text" class="form-control" placeholder="Your Name" required>
             </div>
@@ -79,43 +93,90 @@
         background-color: #f8f9fa;
     }
     h1, h2, h3 {
-        font-weight: 600;
+        font-weight: 700;
     }
     .card {
-        transition: transform 0.3s ease-in-out;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        border-radius: 10px;
+        overflow: hidden;
     }
     .card:hover {
         transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     }
     .btn-link {
         text-decoration: none;
     }
     .form-control {
         border: 1px solid #ced4da;
-        border-radius: 0.25rem;
+        border-radius: 5px;
+        padding: 12px;
     }
     .form-control:focus {
         box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
         border-color: #80bdff;
     }
     .text-primary {
-        color: #007bff !important;
+        color: #0056b3 !important;
     }
     .btn-primary {
-        background-color: #007bff;
-        border-color: #007bff;
-    }
-    .btn-primary:hover {
         background-color: #0056b3;
         border-color: #0056b3;
+        padding: 10px 20px;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+        background-color: #003d82;
+        border-color: #003d82;
+        transform: translateY(-2px);
     }
     .btn-outline-primary {
-        color: #007bff;
-        border-color: #007bff;
+        color: #0056b3;
+        border-color: #0056b3;
+        padding: 8px 16px;
+        border-radius: 5px;
+        transition: all 0.3s ease;
     }
     .btn-outline-primary:hover {
-        background-color: #007bff;
+        background-color: #0056b3;
         color: #fff;
+        transform: translateY(-2px);
+    }
+    .container {
+        max-width: 1140px;
+    }
+    section {
+        margin-bottom: 2rem; /* Reduced from 3rem to 2rem */
+    }
+    .display-3 {
+        font-size: 3.5rem;
+        margin-bottom: 0.5rem; /* Reduced from 1rem to 0.5rem */
+    }
+    .lead {
+        font-size: 1.25rem;
+    }
+    /* New styles to reduce gaps */
+    .py-5 {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+    }
+    .mb-4 {
+        margin-bottom: 1rem !important;
+    }
+    header.py-5 {
+        padding-top: 3rem !important;
+        padding-bottom: 2rem !important;
+    }
+    #about {
+        padding-top: 0 !important;
+    }
+    .social-icons a {
+        color: #0056b3;
+        transition: color 0.3s ease;
+    }
+    .social-icons a:hover {
+        color: #003d82;
     }
 </style>
 {% endblock %}
@@ -134,4 +195,5 @@
     }
 }
 </script>
+<script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
 {% endblock %}
