@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://1https://full-stack-portfolio-hl3j.onrender.com//sitemap.xml
+Sitemap: https://https://full-stack-portfolio-hl3j.onrender.com//sitemap.xml
