@@ -36,7 +36,12 @@
             <div class="col-md-4">
                 <div class="card h-100 shadow-sm border-0">
                     <div class="card-body">
-                        <h3 class="card-title h5">{{ project.title }}</h3>
+                        <h5 class="card-title">
+                            {{ project.title }}
+                            {% if project.awards %}
+                            <span class="badge bg-success">Award Winner</span>
+                            {% endif %}
+                        </h5>
                         <p class="card-text text-muted">{{ project.description[:100] }}...</p>
                         <a href="{{ url_for('view_project', project_id=project.id) }}" class="btn btn-outline-primary btn-sm stretched-link">View Project</a>
                     </div>

@@ -59,6 +59,18 @@
                     {% endif %}
                 </div>
 
+                <!-- New: Awards and Achievements badges -->
+                {% if project.awards or project.achievements %}
+                <div class="mb-4">
+                    {% for award in project.get_awards_list() %}
+                    <span class="badge bg-success me-2 mb-2">🏆 {{ award }}</span>
+                    {% endfor %}
+                    {% for achievement in project.get_achievements_list() %}
+                    <span class="badge bg-info me-2 mb-2">🎉 {{ achievement }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
                 <div class="project-card">
                     {% if project.cover_image %}
                     <div class="project-image-container mb-4">
@@ -250,6 +262,18 @@
         width: 20px;
         text-align: center;
         margin-right: 10px;
+    }
+
+    /* New styles for awards and achievements badges */
+    .badge {
+        font-size: 0.9rem;
+        padding: 0.5em 1em;
+    }
+    .badge.bg-success {
+        background-color: #28a745 !important;
+    }
+    .badge.bg-info {
+        background-color: #17a2b8 !important;
     }
 </style>
 {% endblock %}

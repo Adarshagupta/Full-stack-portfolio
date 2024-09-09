@@ -15,6 +15,8 @@ import xml.etree.ElementTree as ET
 from xml.dom import minidom
 from urllib.parse import quote
 from sqlalchemy import or_
+from alembic import op
+import sqlalchemy as sa
 
 # Load environment variables
 load_dotenv()
@@ -92,12 +94,20 @@ class Project(db.Model):
     cover_image = db.Column(db.String(255))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     tech_used = db.Column(db.Text)
+    awards = db.Column(db.Text)
+    achievements = db.Column(db.Text)
 
     def render_description(self):
         return markdown.markdown(self.description, extensions=['fenced_code', MermaidExtension()])
 
     def get_tech_used_list(self):
         return [tech.strip() for tech in self.tech_used.split(',')] if self.tech_used else []
+
+    def get_awards_list(self):
+        return [award.strip() for award in self.awards.split(',')] if self.awards else []
+
+    def get_achievements_list(self):
+        return [achievement.strip() for achievement in self.achievements.split(',')] if self.achievements else []
 
 class Research(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -184,6 +194,8 @@ def new_project():
         project_files_link = request.form.get('project_files_link')
         research_link = request.form.get('research_link')
         tech_used = request.form.get('tech_used')
+        awards = request.form.get('awards')
+        achievements = request.form.get('achievements')
         
         new_project = Project(
             title=title,
@@ -193,7 +205,9 @@ def new_project():
             twitter_link=twitter_link,
             project_files_link=project_files_link,
             research_link=research_link,
-            tech_used=tech_used
+            tech_used=tech_used,
+            awards=awards,
+            achievements=achievements
         )
         
         # Handle file upload
@@ -239,6 +253,8 @@ def edit_project(project_id):
         project.project_files_link = request.form.get('project_files_link')
         project.research_link = request.form.get('research_link')
         project.tech_used = request.form.get('tech_used')
+        project.awards = request.form.get('awards')
+        project.achievements = request.form.get('achievements')
         
         if 'cover_image' in request.files:
             file = request.files['cover_image']
@@ -623,6 +639,12 @@ def advanced_search():
 def contact():
     # Your contact page logic here
     return render_template('contact.html')
+
+def upgrade():
+    op.add_column('project', sa.Column('awards', sa.String(), nullable=True))
+
+def downgrade():
+    op.drop_column('project', 'awards')
 
 if __name__ == '__main__':
     with app.app_context():
