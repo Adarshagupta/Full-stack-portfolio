@@ -110,6 +110,18 @@ class Research(db.Model):
     def render_content(self):
         return markdown.markdown(self.content, extensions=['fenced_code', MermaidExtension()])
 
+class Feedback(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=True)
+    research_id = db.Column(db.Integer, db.ForeignKey('research.id'), nullable=True)
+
+    project = db.relationship('Project', backref=db.backref('feedbacks', lazy=True))
+    research = db.relationship('Research', backref=db.backref('feedbacks', lazy=True))
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -308,9 +320,21 @@ def view_blog(blog_id):
     share_text = quote(f"Check out this blog post: {blog.title}")
     return render_template('view_blog.html', blog=blog, share_url=share_url, share_text=share_text)
 
-@app.route('/project/<int:project_id>')
+@app.route('/project/<int:project_id>', methods=['GET', 'POST'])
 def view_project(project_id):
     project = Project.query.get_or_404(project_id)
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        content = request.form.get('content')
+        if name and email and content:
+            feedback = Feedback(name=name, email=email, content=content, project_id=project_id)
+            db.session.add(feedback)
+            db.session.commit()
+            flash('Thank you for your feedback!', 'success')
+        else:
+            flash('Please fill out all fields.', 'error')
+        return redirect(url_for('view_project', project_id=project_id))
     share_url = quote(url_for('view_project', project_id=project.id, _external=True))
     share_text = quote(f"Check out this project: {project.title}")
     return render_template('view_project.html', project=project, share_url=share_url, share_text=share_text)
@@ -368,9 +392,21 @@ def archive_research(research_id):
     flash(f'Research item {action} successfully', 'success')
     return redirect(url_for('admin_dashboard'))
 
-@app.route('/research/<int:research_id>')
+@app.route('/research/<int:research_id>', methods=['GET', 'POST'])
 def view_research(research_id):
     research = Research.query.get_or_404(research_id)
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        content = request.form.get('content')
+        if name and email and content:
+            feedback = Feedback(name=name, email=email, content=content, research_id=research_id)
+            db.session.add(feedback)
+            db.session.commit()
+            flash('Thank you for your feedback!', 'success')
+        else:
+            flash('Please fill out all fields.', 'error')
+        return redirect(url_for('view_research', research_id=research_id))
     share_url = quote(url_for('view_research', research_id=research.id, _external=True))
     share_text = quote(f"Check out this research: {research.title}")
     return render_template('view_research.html', research=research, share_url=share_url, share_text=share_text)
@@ -418,7 +454,7 @@ def update_sitemap():
     root.set("xmlns:image", "http://www.google.com/schemas/sitemap-image/1.1")
 
     # Add home page
-    add_url(root, url_for('home', _external=True), changefreq="daily", priority="1.0")
+    add_url(root, url_for('home', _external=True), changefreq="daily", priority="1.0", description="Welcome to my full-stack developer portfolio showcasing my projects, blog posts, and research.")
 
     # Add blog posts
     blogs = Blog.query.filter_by(is_archived=False).order_by(Blog.created_at.desc()).all()
@@ -426,7 +462,8 @@ def update_sitemap():
         url = add_url(root, url_for('view_blog', blog_id=blog.id, _external=True),
                       lastmod=blog.created_at,
                       changefreq="weekly",
-                      priority="0.8")
+                      priority="0.8",
+                      description=f"Exploring the latest trends in full-stack development and their impact on modern web applications.")
         
         # Add blog post translations if available
         # add_translations(url, 'view_blog', {'blog_id': blog.id})
@@ -437,7 +474,8 @@ def update_sitemap():
         url = add_url(root, url_for('view_project', project_id=project.id, _external=True),
                       lastmod=project.created_at,
                       changefreq="monthly",
-                      priority="0.7")
+                      priority="0.7",
+                      description=f"{project.title}: {project.description[:150]}")
         
         # Add project image
         if project.cover_image:
@@ -454,14 +492,19 @@ def update_sitemap():
         url = add_url(root, url_for('view_research', research_id=research.id, _external=True),
                       lastmod=research.created_at,
                       changefreq="monthly",
-                      priority="0.7")
+                      priority="0.7",
+                      description=f"An in-depth analysis of emerging technologies in AI and machine learning for web development.")
+
+    # Add About and Contact pages
+    add_url(root, '/about', changefreq="monthly", priority="0.5", description="Learn more about my background, skills, and experience as a full-stack developer.")
+    add_url(root, url_for('contact', _external=True), changefreq="monthly", priority="0.5", description="Get in touch with me for collaboration opportunities or to discuss your project ideas.")
 
     # Save the sitemap
     xml_str = minidom.parseString(ET.tostring(root)).toprettyxml(indent="  ")
     with open("sitemap.xml", "w", encoding="utf-8") as f:
         f.write(xml_str)
 
-def add_url(root, loc, lastmod=None, changefreq=None, priority=None):
+def add_url(root, loc, lastmod=None, changefreq=None, priority=None, description=None):
     url = ET.SubElement(root, "url")
     ET.SubElement(url, "loc").text = loc
     if lastmod:
@@ -470,6 +513,8 @@ def add_url(root, loc, lastmod=None, changefreq=None, priority=None):
         ET.SubElement(url, "changefreq").text = changefreq
     if priority:
         ET.SubElement(url, "priority").text = priority
+    if description:
+        ET.SubElement(url, "description").text = description
     return url
 
 # Uncomment and implement this function if you have multi-language support
@@ -573,6 +618,11 @@ def advanced_search():
         results.extend(research_query.all())
 
     return render_template('advanced_search_results.html', results=results, query=query)
+
+@app.route('/contact')
+def contact():
+    # Your contact page logic here
+    return render_template('contact.html')
 
 if __name__ == '__main__':
     with app.app_context():

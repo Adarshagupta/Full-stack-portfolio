@@ -1,108 +1,70 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
-        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
-        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
-        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 
-                            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-
-  <!-- Home Page -->
+<?xml version="1.0" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://full-stack-portfolio-hl3j.onrender.com/</loc>
-    <lastmod>2024-09-07T09:41:09+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <description>Welcome to my full-stack developer portfolio showcasing my projects, blog posts, and research.</description>
   </url>
-
-  <!-- Projects Page -->
   <url>
-    <loc>https://full-stack-portfolio-hl3j.onrender.com/projects</loc>
-    <lastmod>2024-09-07T09:41:09+00:00</lastmod>
+    <loc>https://full-stack-portfolio-hl3j.onrender.com/blog/8</loc>
+    <lastmod>2024-09-07T09:41:09.668889+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
-    <description>Explore my diverse range of full-stack development projects, from web applications to mobile apps.</description>
+    <description>Exploring the latest trends in full-stack development and their impact on modern web applications.</description>
   </url>
-
-  <!-- Blog Page -->
   <url>
-    <loc>https://full-stack-portfolio-hl3j.onrender.com/blog</loc>
-    <lastmod>2024-09-07T09:41:09+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <description>Read my latest thoughts and insights on full-stack development, technology trends, and coding tips.</description>
-  </url>
-
-  <!-- Research Page -->
-  <url>
-    <loc>https://full-stack-portfolio-hl3j.onrender.com/research</loc>
-    <lastmod>2024-09-07T09:41:09+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <description>Discover my in-depth research on cutting-edge technologies and development methodologies.</description>
-  </url>
-
-  <!-- Individual Project Pages -->
-  <url>
-    <loc>https://full-stack-portfolio-hl3j.onrender.com/project/5</loc>
-    <lastmod>2024-09-03T07:20:12+00:00</lastmod>
+    <loc>https://full-stack-portfolio-hl3j.onrender.com/project/6</loc>
+    <lastmod>2024-09-08T18:44:41.699897+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <description>BookAI: An innovative AI-powered book generator that creates unique stories based on user input.</description>
+    <description>Full Stack Portfolio Website: portfolio</description>
+    <image:image>
+      <image:loc>https://full-stack-portfolio-hl3j.onrender.com/static/uploads/Untitled_diagram-2024-09-01-042444.png</image:loc>
+      <image:caption>Full Stack Portfolio Website</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://full-stack-portfolio-hl3j.onrender.com/project/5</loc>
+    <lastmod>2024-09-03T07:20:12.413479+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <description>BookAI - 📚 AI Book Generator Documentation 📚: ## 🚀 Introduction 🚀
+
+The AI Book Generator is a powerful web application that leverages AI models from OpenAI and Together to generate detailed book</description>
     <image:image>
       <image:loc>https://full-stack-portfolio-hl3j.onrender.com/static/uploads/Screenshot_2024-08-12_231447.png</image:loc>
-      <image:title>BookAI - 📚 AI Book Generator Documentation 📚</image:title>
-      <image:caption>Screenshot of BookAI project</image:caption>
+      <image:caption>BookAI - 📚 AI Book Generator Documentation 📚</image:caption>
     </image:image>
   </url>
   <url>
     <loc>https://full-stack-portfolio-hl3j.onrender.com/project/4</loc>
-    <lastmod>2024-09-03T05:54:49+00:00</lastmod>
+    <lastmod>2024-09-03T05:54:49.150191+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <description>Cartonify: A powerful image processing tool that transforms photos into high-quality cartoon-style images.</description>
+    <description>Cartonify - Generate best quality image in seconds: This report provides an in-depth analysis of a Flask web application designed to facilitate the generation and management of images and videos based o</description>
     <image:image>
-      <image:loc>https://full-stack-portfolio-hl3j.onrender.com/static/uploads/simplepng.png</image:loc>
-      <image:title>Cartonify - Generate best quality image in seconds</image:title>
-      <image:caption>Screenshot of Cartonify project</image:caption>
+      <image:loc>https://full-stack-portfolio-hl3j.onrender.com/static/uploads/Screenshot_2024-08-30_122151.png</image:loc>
+      <image:caption>Cartonify - Generate best quality image in seconds</image:caption>
     </image:image>
   </url>
-
-  <!-- Individual Blog Post Pages -->
-  <url>
-    <loc>https://full-stack-portfolio-hl3j.onrender.com/blog/8</loc>
-    <lastmod>2024-09-07T09:41:09+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-    <description>Exploring the latest trends in full-stack development and their impact on modern web applications.</description>
-  </url>
-
-  <!-- Individual Research Pages -->
   <url>
     <loc>https://full-stack-portfolio-hl3j.onrender.com/research/1</loc>
-    <lastmod>2024-09-03T16:32:40+00:00</lastmod>
+    <lastmod>2024-09-03T16:32:40.748235+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <description>An in-depth analysis of emerging technologies in AI and machine learning for web development.</description>
   </url>
-
-  <!-- About Page -->
   <url>
-    <loc>https://full-stack-portfolio-hl3j.onrender.com/about</loc>
-    <lastmod>2024-09-07T09:41:09+00:00</lastmod>
+    <loc>/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
     <description>Learn more about my background, skills, and experience as a full-stack developer.</description>
   </url>
-
-  <!-- Contact Page -->
   <url>
     <loc>https://full-stack-portfolio-hl3j.onrender.com/contact</loc>
-    <lastmod>2024-09-07T09:41:09+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
     <description>Get in touch with me for collaboration opportunities or to discuss your project ideas.</description>
   </url>
-
 </urlset>

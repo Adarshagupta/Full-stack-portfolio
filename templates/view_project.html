@@ -107,6 +107,36 @@
                         {{ project.render_description() | safe }}
                     </div>
                 </div>
+
+                <h2>Feedback</h2>
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="content" class="form-label">Your Feedback</label>
+                        <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Feedback</button>
+                </form>
+
+                <h3>Previous Feedback</h3>
+                {% for feedback in project.feedbacks %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ feedback.name }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ feedback.created_at.strftime('%Y-%m-%d %H:%M') }}</h6>
+                            <p class="card-text">{{ feedback.content }}</p>
+                        </div>
+                    </div>
+                {% else %}
+                    <p>No feedback yet.</p>
+                {% endfor %}
             </main>
         </div>
     </div>
