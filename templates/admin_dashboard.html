@@ -1,108 +1,95 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container-fluid mt-4">
     <h1 class="text-center mb-4">Admin Dashboard</h1>
     <div class="row">
-        <div class="col-md-6 mb-4">
-            <div class="card shadow">
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow h-100">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h2 class="h4 mb-0">Blogs</h2>
-                    <a href="{{ url_for('new_blog') }}" class="btn btn-light btn-sm">New Blog Post</a>
+                    <a href="{{ url_for('new_blog') }}" class="btn btn-light btn-sm"><i class="fas fa-plus"></i> New Blog</a>
                 </div>
-                <ul class="list-group list-group-flush">
-                    {% for blog in blogs %}
-                    <li class="list-group-item">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for blog in blogs %}
+                        <div class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
                                 <h5 class="mb-1">{{ blog.title }}</h5>
-                                <p class="text-muted small mb-0">
-                                    {% if blog.created_at %}
-                                        {{ blog.created_at.strftime('%Y-%m-%d') }}
-                                    {% else %}
-                                        Date unknown
-                                    {% endif %}
-                                </p>
+                                <small>{{ blog.created_at.strftime('%Y-%m-%d') if blog.created_at else 'Date unknown' }}</small>
                             </div>
-                            <div class="btn-group" role="group">
-                                <a href="{{ url_for('view_blog', blog_id=blog.id) }}" class="btn btn-outline-secondary btn-sm">View</a>
-                                <a href="{{ url_for('edit_blog', blog_id=blog.id) }}" class="btn btn-outline-primary btn-sm">Edit</a>
-                                <button type="button" class="btn btn-outline-danger btn-sm" onclick="confirmDelete('blog', {{ blog.id }})">Delete</button>
+                            <div class="mt-2">
+                                <a href="{{ url_for('view_blog', blog_id=blog.id) }}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-eye"></i></a>
+                                <a href="{{ url_for('edit_blog', blog_id=blog.id) }}" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i></a>
+                                <button type="button" class="btn btn-outline-danger btn-sm" onclick="confirmDelete('blog', {{ blog.id }})"><i class="fas fa-trash"></i></button>
                                 <form id="archiveBlogForm{{ blog.id }}" action="{{ url_for('archive_blog', blog_id=blog.id) }}" method="POST" class="d-inline">
-                                    <button type="submit" class="btn btn-outline-warning btn-sm">{% if blog.is_archived %}Unarchive{% else %}Archive{% endif %}</button>
+                                    <button type="submit" class="btn btn-outline-warning btn-sm"><i class="fas fa-archive"></i> {% if blog.is_archived %}Unarchive{% else %}Archive{% endif %}</button>
                                 </form>
                             </div>
                         </div>
-                    </li>
-                    {% endfor %}
-                </ul>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="col-md-6 mb-4">
-            <div class="card shadow">
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow h-100">
                 <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
                     <h2 class="h4 mb-0">Projects</h2>
-                    <a href="{{ url_for('new_project') }}" class="btn btn-light btn-sm">New Project</a>
+                    <a href="{{ url_for('new_project') }}" class="btn btn-light btn-sm"><i class="fas fa-plus"></i> New Project</a>
                 </div>
-                <ul class="list-group list-group-flush">
-                    {% for project in projects %}
-                    <li class="list-group-item">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for project in projects %}
+                        <div class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
                                 <h5 class="mb-1">{{ project.title }}</h5>
-                                <p class="text-muted">
-                                    {% if project.created_at %}
-                                        {{ project.created_at.strftime('%Y-%m-%d') }}
-                                    {% else %}
-                                        Date unknown
-                                    {% endif %}
-                                </p>
+                                <small>{{ project.created_at.strftime('%Y-%m-%d') if project.created_at else 'Date unknown' }}</small>
                             </div>
-                            <div class="btn-group" role="group">
-                                <a href="{{ url_for('view_project', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm">View</a>
-                                <a href="{{ url_for('edit_project', project_id=project.id) }}" class="btn btn-outline-primary btn-sm">Edit</a>
-                                <button type="button" class="btn btn-outline-danger btn-sm" onclick="confirmDelete('project', {{ project.id }})">Delete</button>
+                            <div class="mt-2">
+                                <a href="{{ url_for('view_project', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-eye"></i></a>
+                                <a href="{{ url_for('edit_project', project_id=project.id) }}" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i></a>
+                                <button type="button" class="btn btn-outline-danger btn-sm" onclick="confirmDelete('project', {{ project.id }})"><i class="fas fa-trash"></i></button>
                                 <form id="archiveProjectForm{{ project.id }}" action="{{ url_for('archive_project', project_id=project.id) }}" method="POST" class="d-inline">
-                                    <button type="submit" class="btn btn-outline-warning btn-sm">{% if project.is_archived %}Unarchive{% else %}Archive{% endif %}</button>
+                                    <button type="submit" class="btn btn-outline-warning btn-sm"><i class="fas fa-archive"></i> {% if project.is_archived %}Unarchive{% else %}Archive{% endif %}</button>
                                 </form>
                             </div>
                         </div>
-                    </li>
-                    {% endfor %}
-                </ul>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                    <h2 class="h4 mb-0">Research Items</h2>
+                    <a href="{{ url_for('new_research') }}" class="btn btn-light btn-sm"><i class="fas fa-plus"></i> New Research</a>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for item in research_items %}
+                        <div class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">{{ item.title }}</h5>
+                                <small>{{ item.created_at.strftime('%Y-%m-%d') }}</small>
+                            </div>
+                            <div class="mt-2">
+                                <a href="{{ url_for('edit_research', research_id=item.id) }}" class="btn btn-outline-primary btn-sm"><i class="fas fa-edit"></i></a>
+                                <form action="{{ url_for('archive_research', research_id=item.id) }}" method="POST" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-warning btn-sm"><i class="fas fa-archive"></i> {% if item.is_archived %}Unarchive{% else %}Archive{% endif %}</button>
+                                </form>
+                                <form action="{{ url_for('delete_research', research_id=item.id) }}" method="POST" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure you want to delete this research item?');"><i class="fas fa-trash"></i></button>
+                                </form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <h2>Research Items</h2>
-    <a href="{{ url_for('new_research') }}" class="btn btn-success">Add New Research</a>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Created At</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in research_items %}
-            <tr>
-                <td>{{ item.title }}</td>
-                <td>{{ item.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-                <td>
-                    <a href="{{ url_for('edit_research', research_id=item.id) }}" class="btn btn-primary btn-sm">Edit</a>
-                    <form action="{{ url_for('archive_research', research_id=item.id) }}" method="POST" style="display: inline;">
-                        <button type="submit" class="btn btn-warning btn-sm">
-                            {% if item.is_archived %}Unarchive{% else %}Archive{% endif %}
-                        </button>
-                    </form>
-                    <form action="{{ url_for('delete_research', research_id=item.id) }}" method="POST" style="display: inline;">
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this research item?');">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
 </div>
 {% endblock %}
 
@@ -110,17 +97,21 @@
 <style>
     .card {
         border: none;
-        transition: transform 0.2s;
+        transition: transform 0.2s, box-shadow 0.2s;
     }
     .card:hover {
         transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
     }
-    .btn-group .btn {
+    .btn-sm {
         padding: 0.25rem 0.5rem;
         font-size: 0.875rem;
     }
-    .list-group-item:hover {
+    .list-group-item-action:hover {
         background-color: #f8f9fa;
+    }
+    .card-header {
+        font-weight: bold;
     }
 </style>
 {% endblock %}

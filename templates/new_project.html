@@ -4,51 +4,94 @@
 <div class="container mt-5">
     <h1>{% if project %}Edit{% else %}New{% endif %} Project</h1>
     <form method="POST" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="title">Title</label>
-            <input type="text" class="form-control" id="title" name="title" value="{{ project.title if project else '' }}" required>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" class="form-control form-control-lg" id="title" name="title" value="{{ project.title if project else '' }}" required>
+                </div>
+                
+                <!-- Tabs for description and preview -->
+                <div class="form-group mt-3">
+                    <ul class="nav nav-tabs" id="descriptionTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="edit-tab" data-bs-toggle="tab" data-bs-target="#edit" type="button" role="tab" aria-controls="edit" aria-selected="true">Edit Description</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="preview-tab" data-bs-toggle="tab" data-bs-target="#preview" type="button" role="tab" aria-controls="preview" aria-selected="false">Preview</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="descriptionTabsContent">
+                        <div class="tab-pane fade show active" id="edit" role="tabpanel" aria-labelledby="edit-tab">
+                            <textarea class="form-control mt-2" id="description" name="description" rows="15" required>{{ project.description if project else '' }}</textarea>
+                        </div>
+                        <div class="tab-pane fade" id="preview" role="tabpanel" aria-labelledby="preview-tab">
+                            <div id="markdown-preview" class="markdown-body border p-3 mt-2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <!-- Sidebar with other form fields -->
+                <div class="form-group">
+                    <label for="github_link">GitHub Link</label>
+                    <input type="url" class="form-control" id="github_link" name="github_link" value="{{ project.github_link if project else '' }}">
+                </div>
+                <div class="form-group mt-3">
+                    <label for="twitter_link">Twitter Link</label>
+                    <input type="url" class="form-control" id="twitter_link" name="twitter_link" value="{{ project.twitter_link if project else '' }}">
+                </div>
+                <div class="form-group mt-3">
+                    <label for="project_files_link">Project Files Link</label>
+                    <input type="url" class="form-control" id="project_files_link" name="project_files_link" value="{{ project.project_files_link if project else '' }}">
+                </div>
+                <div class="form-group mt-3">
+                    <label for="research_link">Research Link</label>
+                    <input type="url" class="form-control" id="research_link" name="research_link" value="{{ project.research_link if project else '' }}">
+                </div>
+                <div class="form-group mt-3">
+                    <label for="cover_image">Cover Image</label>
+                    <input type="file" class="form-control" id="cover_image" name="cover_image">
+                    {% if project and project.cover_image %}
+                    <img src="{{ url_for('static', filename='uploads/' + project.cover_image) }}" alt="Current cover image" class="mt-2 img-fluid">
+                    {% endif %}
+                </div>
+                <div class="form-group mt-3">
+                    <label for="tech_used">Tech Used</label>
+                    <input type="text" class="form-control" id="tech_used" name="tech_used" value="{{ project.tech_used if project else '' }}">
+                    <small class="form-text text-muted">Enter technologies used, separated by commas</small>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="awards">Awards</label>
+                    <input type="text" class="form-control" id="awards" name="awards" value="{{ project.awards if project else '' }}">
+                    <small class="form-text text-muted">Enter awards, separated by commas</small>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="achievements">Achievements</label>
+                    <input type="text" class="form-control" id="achievements" name="achievements" value="{{ project.achievements if project else '' }}">
+                    <small class="form-text text-muted">Enter achievements, separated by commas</small>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="description">Description</label>
-            <textarea class="form-control" id="description" name="description" rows="10" required>{{ project.description if project else '' }}</textarea>
-        </div>
-        <div class="form-group">
-            <label for="github_link">GitHub Link</label>
-            <input type="url" class="form-control" id="github_link" name="github_link" value="{{ project.github_link if project else '' }}">
-        </div>
-        <div class="form-group">
-            <label for="twitter_link">Twitter Link</label>
-            <input type="url" class="form-control" id="twitter_link" name="twitter_link" value="{{ project.twitter_link if project else '' }}">
-        </div>
-        <div class="form-group">
-            <label for="project_files_link">Project Files Link</label>
-            <input type="url" class="form-control" id="project_files_link" name="project_files_link" value="{{ project.project_files_link if project else '' }}">
-        </div>
-        <div class="form-group">
-            <label for="research_link">Research Link</label>
-            <input type="url" class="form-control" id="research_link" name="research_link" value="{{ project.research_link if project else '' }}">
-        </div>
-        <div class="form-group">
-            <label for="cover_image">Cover Image</label>
-            <input type="file" class="form-control-file" id="cover_image" name="cover_image">
-            {% if project and project.cover_image %}
-            <img src="{{ url_for('static', filename='uploads/' + project.cover_image) }}" alt="Current cover image" class="mt-2" style="max-width: 200px;">
-            {% endif %}
-        </div>
-        <div class="mb-3">
-            <label for="tech_used" class="form-label">Tech Used (comma-separated)</label>
-            <input type="text" class="form-control" id="tech_used" name="tech_used" value="{{ project.tech_used if project else '' }}">
-            <small class="form-text text-muted">Enter technologies used, separated by commas (e.g., Python, Flask, PostgreSQL)</small>
-        </div>
-        <div class="form-group">
-            <label for="awards">Awards (comma-separated)</label>
-            <input type="text" class="form-control" id="awards" name="awards" value="{{ project.awards if project else '' }}">
-        </div>
-        <div class="form-group">
-            <label for="achievements">Achievements (comma-separated)</label>
-            <input type="text" class="form-control" id="achievements" name="achievements" value="{{ project.achievements if project else '' }}">
-        </div>
-        <button type="submit" class="btn btn-primary">{% if project %}Update{% else %}Create{% endif %} Project</button>
+        
+        <button type="submit" class="btn btn-primary btn-lg mt-4">{% if project %}Update{% else %}Create{% endif %} Project</button>
     </form>
 </div>
+
+<!-- Add these scripts at the end of the body -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/2.0.3/marked.min.js"></script>
+<script>
+    const descriptionTextarea = document.getElementById('description');
+    const markdownPreview = document.getElementById('markdown-preview');
+    const previewTab = document.getElementById('preview-tab');
+
+    function updatePreview() {
+        markdownPreview.innerHTML = marked(descriptionTextarea.value);
+    }
+
+    descriptionTextarea.addEventListener('input', updatePreview);
+    previewTab.addEventListener('shown.bs.tab', updatePreview);
+    updatePreview(); // Initial preview
+</script>
 {% endblock %}

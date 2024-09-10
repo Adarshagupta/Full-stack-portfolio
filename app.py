@@ -17,6 +17,7 @@ from urllib.parse import quote
 from sqlalchemy import or_
 from alembic import op
 import sqlalchemy as sa
+from markdown2 import Markdown
 
 # Load environment variables
 load_dotenv()
@@ -28,7 +29,7 @@ UPLOAD_FOLDER = os.path.join(basedir, 'static', 'uploads')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
-app.config['SERVER_NAME'] = 'full-stack-portfolio-hl3j.onrender.com'  # Replace with your actual domain
+app.config['SERVER_NAME'] = 'adarshgupta.onrender.com'  # Replace with your actual domain
 app.config['PREFERRED_URL_SCHEME'] = 'https'  # Or 'http' if you're not using HTTPS
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max-limit
@@ -85,6 +86,7 @@ class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
+    description_html = db.Column(db.Text)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     is_archived = db.Column(db.Boolean, default=False)
     github_link = db.Column(db.String(255))
@@ -197,9 +199,14 @@ def new_project():
         awards = request.form.get('awards')
         achievements = request.form.get('achievements')
         
+        # Convert markdown to HTML
+        markdowner = Markdown()
+        description_html = markdowner.convert(description)
+        
         new_project = Project(
             title=title,
             description=description,
+            description_html=description_html,
             author_id=current_user.id,
             github_link=github_link,
             twitter_link=twitter_link,
@@ -255,6 +262,10 @@ def edit_project(project_id):
         project.tech_used = request.form.get('tech_used')
         project.awards = request.form.get('awards')
         project.achievements = request.form.get('achievements')
+        
+        # Convert markdown to HTML
+        markdowner = Markdown()
+        project.description_html = markdowner.convert(project.description)
         
         if 'cover_image' in request.files:
             file = request.files['cover_image']
