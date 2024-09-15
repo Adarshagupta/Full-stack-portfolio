@@ -36,6 +36,7 @@
             --link-color: #007bff;
             --footer-bg: #f8f9fa;
             --content-bg: #ffffff;
+            --link-color-rgb: 0, 123, 255;
         }
         
         body.dark-mode {
@@ -46,6 +47,7 @@
             --link-color: #4da3ff;
             --footer-bg: #2c2c2c;
             --content-bg: #2c2c2c;
+            --link-color-rgb: 77, 163, 255;
         }
 
         body {
@@ -57,17 +59,29 @@
         .navbar {
             background-color: var(--navbar-bg);
             border-bottom: 1px solid var(--navbar-border);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         .navbar-brand {
             font-weight: bold;
             color: var(--link-color) !important;
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
         .nav-link {
             color: var(--text-color) !important;
             transition: color 0.3s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 0.3px;
+            padding: 0.5rem 0.8rem !important;
+            margin: 0 0.1rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
         }
         .nav-link:hover {
             color: var(--link-color) !important;
+            background-color: rgba(var(--link-color-rgb), 0.08);
         }
         .footer {
             background-color: var(--footer-bg);
@@ -104,11 +118,22 @@
         }
         .dark-mode-toggle {
             cursor: pointer;
-            padding: 5px 10px;
+            padding: 0.4rem;
             background-color: var(--navbar-bg);
             border: 1px solid var(--navbar-border);
             color: var(--text-color);
             border-radius: 5px;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            margin-left: 0.2rem;
+            transition: color 0.2s ease;
+        }
+        .dark-mode-toggle:hover {
+            color: var(--link-color);
+        }
+        .search-link {
+            padding: 0.5rem 0.6rem !important;
         }
     </style>
     {% block extra_css %}{% endblock %}
@@ -121,7 +146,7 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg sticky-top">
-        <div class="container-fluid">
+        <div class="container">
             <a class="navbar-brand" href="{{ url_for('home') }}">
                 <i class="fas fa-code"></i> Adarsh Gupta
             </a>
@@ -149,13 +174,13 @@
                         <a class="nav-link" href="{{ url_for('research') }}">Research</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#searchModal">
-                            <i class="fas fa-search"></i> Search
+                        <a class="nav-link search-link" href="#" data-bs-toggle="modal" data-bs-target="#searchModal">
+                            <i class="fas fa-search"></i>
                         </a>
                     </li>
                     <li class="nav-item">
                         <button id="darkModeToggle" class="dark-mode-toggle">
-                            <i class="fas fa-moon"></i> Toggle Dark Mode
+                            <i class="fas fa-moon"></i>
                         </button>
                     </li>
                 </ul>

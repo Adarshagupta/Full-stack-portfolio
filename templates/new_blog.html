@@ -11,6 +11,21 @@
         <label for="content">Content</label>
         <textarea class="form-control" id="content" name="content" rows="10" required>{{ blog.content if blog else '' }}</textarea>
     </div>
+    <div class="form-group">
+        <label for="auto_generate">Auto-generate posts</label>
+        <input type="checkbox" id="auto_generate" name="auto_generate" {% if auto_generate %}checked{% endif %}>
+    </div>
+    <div class="form-group">
+        <label for="interval">Generation interval (minutes)</label>
+        <input type="number" class="form-control" id="interval" name="interval" value="{{ interval if interval else 5 }}" min="1">
+    </div>
     <button type="submit" class="btn btn-primary">{% if blog %}Update{% else %}Create{% endif %} Blog Post</button>
 </form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Add JavaScript to handle auto-generation
+    // This will need to be implemented on the server-side
+</script>
 {% endblock %}
