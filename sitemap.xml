@@ -1,31 +1,31 @@
 <?xml version="1.0" ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>http://127.0.0.1:5000/</loc>
+    <loc>https://adarshgupta.onrender.com/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <description>Welcome to my full-stack developer portfolio showcasing my projects, blog posts, and research.</description>
   </url>
   <url>
-    <loc>http://127.0.0.1:5000/blog/8</loc>
+    <loc>https://adarshgupta.onrender.com/blog/8</loc>
     <lastmod>2024-09-07T09:41:09.668889+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <description>Exploring the latest trends in full-stack development and their impact on modern web applications.</description>
   </url>
   <url>
-    <loc>http://127.0.0.1:5000/project/9</loc>
+    <loc>https://adarshgupta.onrender.com/project/9</loc>
     <lastmod>2024-09-15T15:33:58.378171+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <description>EquiHealth - Your Personal Fitness and Mental Wellness Super App: In today's fast-paced world, maintaining a balance between physical fitness and mental well-being is crucial. EquiHealth is a revolutionary fitness an</description>
     <image:image>
-      <image:loc>http://127.0.0.1:5000/static/uploads/mermaid-diagram-2024-09-15-151841.png</image:loc>
+      <image:loc>https://adarshgupta.onrender.com/static/uploads/mermaid-diagram-2024-09-15-151841.png</image:loc>
       <image:caption>EquiHealth - Your Personal Fitness and Mental Wellness Super App</image:caption>
     </image:image>
   </url>
   <url>
-    <loc>http://127.0.0.1:5000/project/8</loc>
+    <loc>https://adarshgupta.onrender.com/project/8</loc>
     <lastmod>2024-09-10T17:50:39.463596+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -34,12 +34,12 @@
 ### Project Overview
 The AI-Powered Chatbot Integration Platform is designed to provide users with the ability to integrate AI </description>
     <image:image>
-      <image:loc>http://127.0.0.1:5000/static/uploads/Screenshot_2024-09-12_224140.png</image:loc>
+      <image:loc>https://adarshgupta.onrender.com/static/uploads/Screenshot_2024-09-12_224140.png</image:loc>
       <image:caption>ChatCat - AI Chatbot integration for businesses</image:caption>
     </image:image>
   </url>
   <url>
-    <loc>http://127.0.0.1:5000/project/7</loc>
+    <loc>https://adarshgupta.onrender.com/project/7</loc>
     <lastmod>2024-09-09T15:28:05.101935+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -48,19 +48,19 @@ The AI-Powered Chatbot Integration Platform is designed to provide users with th
 This project report outlines the development and implementation of Tricker, an open-source Customer Relationship Management </description>
   </url>
   <url>
-    <loc>http://127.0.0.1:5000/project/6</loc>
+    <loc>https://adarshgupta.onrender.com/project/6</loc>
     <lastmod>2024-09-08T18:44:41.699897+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <description>Full Stack Portfolio Website: #### Overview
 This Flask application is a comprehensive full-stack portfolio website that includes features for managing blogs, projects, and researc</description>
     <image:image>
-      <image:loc>http://127.0.0.1:5000/static/uploads/Screenshot_2024-09-15_182844.png</image:loc>
+      <image:loc>https://adarshgupta.onrender.com/static/uploads/Screenshot_2024-09-15_182844.png</image:loc>
       <image:caption>Full Stack Portfolio Website</image:caption>
     </image:image>
   </url>
   <url>
-    <loc>http://127.0.0.1:5000/project/5</loc>
+    <loc>https://adarshgupta.onrender.com/project/5</loc>
     <lastmod>2024-09-03T07:20:12.413479+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -68,23 +68,23 @@ This Flask application is a comprehensive full-stack portfolio website that incl
 
 The AI Book Generator is a powerful web application that leverages AI models from OpenAI and Together to generate detailed book</description>
     <image:image>
-      <image:loc>http://127.0.0.1:5000/static/uploads/Screenshot_2024-08-12_231447.png</image:loc>
+      <image:loc>https://adarshgupta.onrender.com/static/uploads/Screenshot_2024-08-12_231447.png</image:loc>
       <image:caption>tryBookAI.com - 📚 AI Book Generator Documentation 📚</image:caption>
     </image:image>
   </url>
   <url>
-    <loc>http://127.0.0.1:5000/project/4</loc>
+    <loc>https://adarshgupta.onrender.com/project/4</loc>
     <lastmod>2024-09-03T05:54:49.150191+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <description>Cartonify.com - Generate best quality image in seconds: This report provides an in-depth analysis of a Flask web application designed to facilitate the generation and management of images and videos based o</description>
     <image:image>
-      <image:loc>http://127.0.0.1:5000/static/uploads/screenshot.png</image:loc>
+      <image:loc>https://adarshgupta.onrender.com/static/uploads/screenshot.png</image:loc>
       <image:caption>Cartonify.com - Generate best quality image in seconds</image:caption>
     </image:image>
   </url>
   <url>
-    <loc>http://127.0.0.1:5000/research/1</loc>
+    <loc>https://adarshgupta.onrender.com/research/1</loc>
     <lastmod>2024-09-03T16:32:40.748235+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -97,7 +97,7 @@ The AI Book Generator is a powerful web application that leverages AI models fro
     <description>Learn more about my background, skills, and experience as a full-stack developer.</description>
   </url>
   <url>
-    <loc>http://127.0.0.1:5000/contact</loc>
+    <loc>https://adarshgupta.onrender.com/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
     <description>Get in touch with me for collaboration opportunities or to discuss your project ideas.</description>
