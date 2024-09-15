@@ -18,3 +18,9 @@ pytz
 markdown2
 requests
 apscheduler
+alembic
+together
+
+# Additional packages based on your imports
+urllib3
+lxml
