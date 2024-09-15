@@ -16,3 +16,4 @@ bleach
 gunicorn
 pytz
 markdown2
+requests
