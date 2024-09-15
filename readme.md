@@ -1,6 +1,6 @@
 #### Overview
 This Flask application is a comprehensive full-stack portfolio website that includes features for managing blogs, projects, and research items. The application is designed to be user-friendly, with an admin dashboard for managing content and a public-facing interface for viewing content. The application also includes SEO optimizations, such as updating the `robots.txt` and `sitemap.xml` files automatically.
-
+![Screenshot](https://adarshgupta.onrender.com/static/uploads/Screenshot_2024-09-15_182844.png)
 #### Key Features
 
 1. **User Authentication and Authorization**
