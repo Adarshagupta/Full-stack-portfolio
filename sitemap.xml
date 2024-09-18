@@ -7,6 +7,13 @@
     <description>Welcome to my full-stack developer portfolio showcasing my projects, blog posts, and research.</description>
   </url>
   <url>
+    <loc>https://adarshgupta.onrender.com/blog/9</loc>
+    <lastmod>2024-09-18T15:49:01.207927+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <description>Exploring the latest trends in full-stack development and their impact on modern web applications.</description>
+  </url>
+  <url>
     <loc>https://adarshgupta.onrender.com/blog/8</loc>
     <lastmod>2024-09-07T09:41:09.668889+00:00</lastmod>
     <changefreq>weekly</changefreq>
