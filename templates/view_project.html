@@ -115,10 +115,27 @@
                             </div>
                         </div>
                     </div>
+                    {% if project.mermaid_chart %}
+                    <h3>Project Diagram</h3>
+                    <div class="mermaid-container">
+                        <div class="mermaid-wrapper">
+                            <div class="mermaid">
+                                {{ project.mermaid_chart | safe }}
+                            </div>
+                        </div>
+                        <div class="mermaid-controls">
+                            <button class="btn btn-sm btn-outline-secondary zoom-in">+</button>
+                            <button class="btn btn-sm btn-outline-secondary zoom-out">-</button>
+                            <button class="btn btn-sm btn-outline-secondary reset">Reset</button>
+                        </div>
+                    </div>
+                    {% endif %}
                     <div id="project-content" class="project-content markdown-content">
                         {{ project.render_description() | safe }}
                     </div>
                 </div>
+
+
 
                 <h2>Feedback</h2>
                 <form method="POST">
@@ -275,13 +292,47 @@
     .badge.bg-info {
         background-color: #17a2b8 !important;
     }
+
+    /* New styles for interactive and movable chart */
+    .mermaid-container {
+        position: relative;
+        width: 100%;
+        height: 600px;  /* Increased height */
+        overflow: hidden;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    .mermaid-wrapper {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: move;
+        transition: transform 0.1s ease;
+    }
+    .mermaid {
+        min-width: 100%;
+        min-height: 100%;
+    }
+    .mermaid-controls {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 1000;
+    }
+    .mermaid-controls button {
+        margin-left: 5px;
+    }
 </style>
 {% endblock %}
 
 {% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        mermaid.init(undefined, ".mermaid");
+        mermaid.initialize({ startOnLoad: true });
 
         // Generate table of contents
         const toc = document.getElementById('toc');
@@ -328,6 +379,85 @@
         document.querySelectorAll('h2, h3').forEach(heading => {
             observer.observe(heading);
         });
+
+        // New code for interactive and movable chart
+        const container = document.querySelector('.mermaid-container');
+        const wrapper = container ? container.querySelector('.mermaid-wrapper') : null;
+        const mermaidDiv = wrapper ? wrapper.querySelector('.mermaid') : null;
+        const controls = container ? container.querySelector('.mermaid-controls') : null;
+
+        if (wrapper && mermaidDiv && controls) {
+            let scale = 1.5;  // Start with a larger scale
+            let translateX = 0;
+            let translateY = 0;
+            const zoomStep = 0.1;
+
+            function updateTransform() {
+                wrapper.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+            }
+
+            function centerChart() {
+                const containerRect = container.getBoundingClientRect();
+                const mermaidRect = mermaidDiv.getBoundingClientRect();
+                
+                translateX = (containerRect.width - mermaidRect.width * scale) / 2;
+                translateY = (containerRect.height - mermaidRect.height * scale) / 2;
+                
+                updateTransform();
+            }
+
+            // Initial centering
+            setTimeout(() => {
+                centerChart();
+                updateTransform();
+            }, 100); // Delay to ensure Mermaid has rendered
+
+            // Zoom functionality
+            controls.querySelector('.zoom-in').addEventListener('click', () => {
+                scale += zoomStep;
+                centerChart();
+            });
+
+            controls.querySelector('.zoom-out').addEventListener('click', () => {
+                scale = Math.max(0.1, scale - zoomStep);
+                centerChart();
+            });
+
+            controls.querySelector('.reset').addEventListener('click', () => {
+                scale = 1.5;  // Reset to initial larger scale
+                centerChart();
+            });
+
+            // Pan functionality
+            let isDragging = false;
+            let startX, startY;
+
+            wrapper.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                startX = e.clientX - translateX;
+                startY = e.clientY - translateY;
+                wrapper.style.cursor = 'grabbing';
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    translateX = e.clientX - startX;
+                    translateY = e.clientY - startY;
+                    updateTransform();
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                wrapper.style.cursor = 'move';
+            });
+
+            // Prevent text selection during drag
+            wrapper.addEventListener('dragstart', (e) => e.preventDefault());
+
+            // Resize handling
+            window.addEventListener('resize', centerChart);
+        }
     });
 </script>
 <script type="application/ld+json">

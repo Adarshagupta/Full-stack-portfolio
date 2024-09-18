@@ -72,6 +72,10 @@
                     <input type="text" class="form-control" id="achievements" name="achievements" value="{{ project.achievements if project else '' }}">
                     <small class="form-text text-muted">Enter achievements, separated by commas</small>
                 </div>
+                <div class="form-group">
+                    <label for="mermaid_chart">Mermaid Chart Code</label>
+                    <textarea class="form-control" id="mermaid_chart" name="mermaid_chart" rows="5">{{ project.mermaid_chart if project else '' }}</textarea>
+                </div>
             </div>
         </div>
         

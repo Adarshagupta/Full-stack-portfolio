@@ -101,6 +101,7 @@ class Project(db.Model):
     tech_used = db.Column(db.Text)
     awards = db.Column(db.Text)
     achievements = db.Column(db.Text)
+    mermaid_chart = db.Column(db.Text)
 
     def render_description(self):
         return markdown.markdown(self.description, extensions=['fenced_code', MermaidExtension()])
@@ -201,9 +202,10 @@ def new_project():
         tech_used = request.form.get('tech_used')
         awards = request.form.get('awards')
         achievements = request.form.get('achievements')
+        mermaid_chart = request.form.get('mermaid_chart')
         
         # Convert markdown to HTML
-        markdowner = Markdown()
+        markdowner = Markdown(extras=["fenced-code-blocks", "tables"])
         description_html = markdowner.convert(description)
         
         new_project = Project(
@@ -217,7 +219,8 @@ def new_project():
             research_link=research_link,
             tech_used=tech_used,
             awards=awards,
-            achievements=achievements
+            achievements=achievements,
+            mermaid_chart=mermaid_chart
         )
         
         # Handle file upload
@@ -265,9 +268,10 @@ def edit_project(project_id):
         project.tech_used = request.form.get('tech_used')
         project.awards = request.form.get('awards')
         project.achievements = request.form.get('achievements')
+        project.mermaid_chart = request.form.get('mermaid_chart')
         
         # Convert markdown to HTML
-        markdowner = Markdown()
+        markdowner = Markdown(extras=["fenced-code-blocks", "tables"])
         project.description_html = markdowner.convert(project.description)
         
         if 'cover_image' in request.files:
