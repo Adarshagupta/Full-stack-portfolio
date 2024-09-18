@@ -26,48 +26,45 @@
                             <i class="fas fa-rss"></i>
                         </a>
                     </div>
-                    <a href="#contact" class="btn btn-primary btn-sm">Get in Touch</a>
+                    <div class="d-flex justify-content-center">
+                        <a href="#contact" class="btn btn-primary btn-sm me-2">Get in Touch</a>
+                        <a href="{{ url_for('static', filename='resume.pdf') }}" class="btn btn-outline-primary btn-sm" target="_blank">Resume</a>
+                    </div>
                 </div>
                 
-                <div class="info-section">
-                    <ul class="nav nav-pills nav-fill mb-3" id="sidebarTabs" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="education-tab" data-bs-toggle="pill" data-bs-target="#education" type="button" role="tab" aria-controls="education" aria-selected="true">Education</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="experience-tab" data-bs-toggle="pill" data-bs-target="#experience" type="button" role="tab" aria-controls="experience" aria-selected="false">Experience</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="entrepreneurship-tab" data-bs-toggle="pill" data-bs-target="#entrepreneurship" type="button" role="tab" aria-controls="entrepreneurship" aria-selected="false">Startup</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="skills-tab" data-bs-toggle="pill" data-bs-target="#skills" type="button" role="tab" aria-controls="skills" aria-selected="false">Skills</button>
-                        </li>
-                    </ul>
-                    <div class="tab-content" id="sidebarTabsContent">
-                        <div class="tab-pane fade show active" id="education" role="tabpanel" aria-labelledby="education-tab">
-                            <div class="info-card">
-                                <h4>Indian Institute of Technology Guwahati</h4>
-                                <p class="small">2024 - 2028</p>
+                <div class="info-section p-3 rounded">
+                    <nav>
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                            <button class="nav-link active" id="nav-education-tab" data-bs-toggle="tab" data-bs-target="#nav-education" type="button" role="tab" aria-controls="nav-education" aria-selected="true">Education</button>
+                            <button class="nav-link" id="nav-experience-tab" data-bs-toggle="tab" data-bs-target="#nav-experience" type="button" role="tab" aria-controls="nav-experience" aria-selected="false">Experience</button>
+                            <button class="nav-link" id="nav-startup-tab" data-bs-toggle="tab" data-bs-target="#nav-startup" type="button" role="tab" aria-controls="nav-startup" aria-selected="false">Startup</button>
+                            <button class="nav-link" id="nav-skills-tab" data-bs-toggle="tab" data-bs-target="#nav-skills" type="button" role="tab" aria-controls="nav-skills" aria-selected="false">Skills</button>
+                        </div>
+                    </nav>
+                    <div class="tab-content mt-3" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="nav-education" role="tabpanel" aria-labelledby="nav-education-tab">
+                            <div class="info-card p-3">
+                                <h4 class="h5">Indian Institute of Technology Guwahati</h4>
+                                <p class="small text-muted mb-0">2024 - 2028</p>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="experience" role="tabpanel" aria-labelledby="experience-tab">
-                            <div class="info-card">
-                                <h4>Software Engineering Intern</h4>
-                                <p class="text-muted">Seaart Company</p>
-                                <p class="small">Summer 2023</p>
+                        <div class="tab-pane fade" id="nav-experience" role="tabpanel" aria-labelledby="nav-experience-tab">
+                            <div class="info-card p-3">
+                                <h4 class="h5">Software Engineering Intern</h4>
+                                <p class="text-muted mb-1">Seaart Company</p>
+                                <p class="small text-muted mb-0">Summer 2023</p>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="entrepreneurship" role="tabpanel" aria-labelledby="entrepreneurship-tab">
-                            <div class="info-card">
-                                <h4>Founder</h4>
-                                <p class="text-muted">Trybookai and Cartonify</p>
-                                <p class="small">Generating $6,000/month in revenue</p>
+                        <div class="tab-pane fade" id="nav-startup" role="tabpanel" aria-labelledby="nav-startup-tab">
+                            <div class="info-card p-3">
+                                <h4 class="h5">Founder</h4>
+                                <p class="text-muted mb-1">Trybookai and Cartonify</p>
+                                <p class="small text-muted mb-0">Generating $6,000/month in revenue</p>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="skills" role="tabpanel" aria-labelledby="skills-tab">
+                        <div class="tab-pane fade" id="nav-skills" role="tabpanel" aria-labelledby="nav-skills-tab">
                             <div class="skill-category mb-3">
-                                <h5>Backend</h5>
+                                <h5 class="h6 mb-2">Backend</h5>
                                 <div class="skill-tags">
                                     <span class="skill-tag">Flask</span>
                                     <span class="skill-tag">Python</span>
@@ -76,7 +73,7 @@
                                 </div>
                             </div>
                             <div class="skill-category mb-3">
-                                <h5>Cloud & Deployment</h5>
+                                <h5 class="h6 mb-2">Cloud & Deployment</h5>
                                 <div class="skill-tags">
                                     <span class="skill-tag">AWS</span>
                                     <span class="skill-tag">Render</span>
@@ -84,13 +81,13 @@
                                 </div>
                             </div>
                             <div class="skill-category mb-3">
-                                <h5>APIs & Integration</h5>
+                                <h5 class="h6 mb-2">APIs & Integration</h5>
                                 <div class="skill-tags">
                                     <span class="skill-tag">Google API</span>
                                 </div>
                             </div>
                             <div class="skill-category">
-                                <h5>AI & Machine Learning</h5>
+                                <h5 class="h6 mb-2">AI & Machine Learning</h5>
                                 <div class="skill-tags">
                                     <span class="skill-tag">PyTorch</span>
                                     <span class="skill-tag">Huggingface</span>
@@ -114,9 +111,9 @@
                 <section id="projects" class="mb-5">
                     <h2 class="h2 mb-4 text-primary">Featured Projects</h2>
                     <div class="row g-4">
-                        {% for project in projects[:3] %}
+                        {% for project in projects[:6] %}
                         <div class="col-md-6 col-lg-4">
-                            <div class="card h-100 shadow-sm border-0 project-card">
+                            <div class="card h-100 shadow-sm project-card">
                                 <div class="card-body">
                                     <h5 class="card-title">
                                         {{ project.title }}
@@ -132,13 +129,12 @@
                         {% endfor %}
                     </div>
                 </section>
-
                 <section id="blog" class="mb-5">
                     <h2 class="h2 mb-4 text-primary">Latest Blog Posts</h2>
                     <div class="row g-4">
-                        {% for blog in blogs %}
-                        <div class="col-md-6 col-lg-4">
-                            <div class="card h-100 shadow-sm border-0 blog-card">
+                        {% for blog in blogs[:4] %}
+                        <div class="col-md-6">
+                            <div class="card h-100 shadow-sm blog-card">
                                 <div class="card-body">
                                     <h3 class="card-title h5">{{ blog.title }}</h3>
                                     <p class="card-text text-muted small">
@@ -177,12 +173,12 @@
 {% block extra_css %}
 <style>
     :root {
-        --primary-color: #4a90e2;
-        --secondary-color: #f5f5f5;
-        --text-color: #333;
+        --primary-color: #000000;
+        --secondary-color: #ffffff;
+        --text-color: #000000;
         --background-color: #ffffff;
-        --sidebar-bg-color: #f0f2f5;
-        --primary-color-rgb: 74, 144, 226;
+        --sidebar-bg-color: #f0f0f0;
+        --border-color: #000000;
     }
 
     body {
@@ -193,13 +189,13 @@
     }
 
     .sidebar {
-        background-color: #f8f9fa;
-        border-right: 1px solid #e9ecef;
+        background-color: var(--sidebar-bg-color);
+        border-right: 2px solid var(--border-color);
         padding: 2rem;
     }
 
     .profile-section img {
-        border: 3px solid var(--primary-color);
+        border: 3px solid var(--border-color);
         transition: transform 0.3s ease;
     }
 
@@ -208,56 +204,49 @@
     }
 
     .social-icons a {
-        color: var(--primary-color);
+        color: var(--text-color);
         font-size: 1.2rem;
-        transition: all 0.3s ease;
+        transition: color 0.3s ease;
     }
 
     .social-icons a:hover {
+        color: var(--primary-color);
+    }
+
+    .info-section {
+        background-color: var(--background-color);
+        border: 2px solid var(--border-color);
+    }
+
+    .nav-tabs {
+        border-bottom: none;
+    }
+
+    .nav-tabs .nav-link {
         color: var(--text-color);
-        transform: translateY(-3px);
+        border: none;
+        padding: 0.5rem 1rem;
+        margin-right: 0.5rem;
+        border-radius: 20px;
+        transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    .nav-pills {
-        background-color: #ffffff;
-        border-radius: 25px;
-        overflow: hidden;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    .nav-pills .nav-link {
-        border-radius: 0;
-        padding: 0.75rem 1rem;
-        font-weight: 500;
-        color: var(--text-color);
-        transition: all 0.3s ease;
-    }
-
-    .nav-pills .nav-link.active,
-    .nav-pills .nav-link:hover {
-        color: #ffffff;
+    .nav-tabs .nav-link:hover,
+    .nav-tabs .nav-link.active {
+        color: var(--secondary-color);
         background-color: var(--primary-color);
+        border: none;
     }
 
     .info-card {
-        background-color: #ffffff;
+        background-color: var(--sidebar-bg-color);
+        border: 1px solid var(--border-color);
         border-radius: 10px;
-        padding: 1rem;
         margin-bottom: 1rem;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        transition: all 0.3s ease;
-    }
-
-    .info-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
     .skill-category h5 {
-        color: var(--primary-color);
-        font-size: 0.9rem;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
+        color: var(--text-color);
     }
 
     .skill-tags {
@@ -267,299 +256,170 @@
     }
 
     .skill-tag {
-        background-color: rgba(var(--primary-color-rgb), 0.1);
-        color: var(--primary-color);
-        font-size: 0.8rem;
-        padding: 0.3rem 0.6rem;
+        background-color: var(--secondary-color);
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
         border-radius: 15px;
-        transition: all 0.3s ease;
+        padding: 0.2rem 0.8rem;
+        font-size: 0.8rem;
+        transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     .skill-tag:hover {
         background-color: var(--primary-color);
-        color: #ffffff;
-    }
-
-    @media (max-width: 991px) {
-        .sidebar {
-            border-right: none;
-            border-bottom: 1px solid #e9ecef;
-            margin-bottom: 2rem;
-        }
+        color: var(--secondary-color);
     }
 
     .text-primary {
-        color: var(--primary-color) !important;
-    }
-
-    .display-4 {
-        font-size: 2.5rem;
-        font-weight: 300;
-        letter-spacing: -1px;
-    }
-
-    .lead {
-        font-size: 1.1rem;
-        font-weight: 300;
-    }
-
-    section {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.5s ease, transform 0.5s ease;
-    }
-
-    section.visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    h2 {
-        font-size: 2rem;
-        font-weight: 300;
-        margin-bottom: 2rem;
-        position: relative;
-        display: inline-block;
+        color: var(--text-color) !important;
     }
 
     h2::after {
-        content: '';
-        position: absolute;
-        width: 50%;
-        height: 2px;
-        bottom: -10px;
-        left: 0;
-        background-color: var(--primary-color);
-        transition: width 0.3s ease;
-    }
-
-    h2:hover::after {
-        width: 100%;
+        background-color: var(--border-color);
     }
 
     .card {
-        border: none;
-        border-radius: 15px;
-        overflow: hidden;
-        transition: all 0.3s ease;
-        background-color: white;
-    }
-
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    }
-
-    .card-body {
-        padding: 1.5rem;
-    }
-
-    .btn {
-        border-radius: 25px;
-        padding: 10px 20px;
-        transition: all 0.3s ease;
-        font-weight: 400;
+        border: 2px solid var(--border-color);
+        background-color: var(--background-color);
     }
 
     .btn-primary {
         background-color: var(--primary-color);
-        border-color: var(--primary-color);
+        border-color: var(--border-color);
+        color: var(--secondary-color);
     }
 
     .btn-primary:hover {
-        background-color: #3a7bc8;
-        border-color: #3a7bc8;
+        background-color: var(--secondary-color);
+        color: var(--primary-color);
     }
 
     .btn-outline-primary {
-        color: var(--primary-color);
-        border-color: var(--primary-color);
+        color: var(--text-color);
+        border-color: var(--border-color);
     }
 
     .btn-outline-primary:hover {
         background-color: var(--primary-color);
-        color: white;
+        color: var(--secondary-color);
     }
 
     .form-control {
-        border: none;
-        border-bottom: 1px solid var(--secondary-color);
-        border-radius: 0;
-        padding: 15px 0;
-        font-weight: 300;
-        background-color: transparent;
+        border: 1px solid var(--border-color);
+        background-color: var(--background-color);
+        color: var(--text-color);
     }
 
     .form-control:focus {
-        box-shadow: none;
         border-color: var(--primary-color);
     }
 
-    .project-card, .blog-card {
-        transition: all 0.3s ease;
-    }
-
-    .project-card:hover, .blog-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    }
-
     .contact-form {
-        transition: all 0.3s ease;
-    }
-
-    .contact-form:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-    }
-
-    html {
-        scroll-behavior: smooth;
-    }
-
-    .skills-section {
-        text-align: left;
-    }
-
-    .skill-category h4 {
-        color: var(--primary-color);
-        font-weight: 500;
-    }
-
-    .badge {
-        font-weight: 400;
-        padding: 0.5em 1em;
-        border-radius: 20px;
+        background-color: var(--background-color);
+        border: 2px solid var(--border-color);
     }
 
     .badge.bg-primary {
-        background-color: rgba(74, 144, 226, 0.1) !important;
-        color: var(--primary-color);
-    }
-
-    @media (max-width: 991px) {
-        .sidebar {
-            min-height: auto;
-            padding: 2rem 0;
-        }
+        background-color: var(--secondary-color) !important;
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
     }
 
     .nav-tabs .nav-link {
         color: var(--text-color);
-        border: none;
-        border-bottom: 2px solid transparent;
-        transition: all 0.3s ease;
     }
 
     .nav-tabs .nav-link:hover,
     .nav-tabs .nav-link.active {
         color: var(--primary-color);
         border-bottom-color: var(--primary-color);
-        background-color: transparent;
-    }
-
-    .tab-content {
-        padding: 20px 0;
-    }
-
-    .sidebar .nav-tabs {
-        border-bottom: none;
-    }
-
-    .sidebar .nav-tabs .nav-link {
-        padding: 0.5rem 0.75rem;
-        font-size: 0.9rem;
-    }
-
-    .sidebar .tab-content {
-        padding: 1rem 0;
-    }
-
-    .sidebar .tab-pane p {
-        font-size: 0.9rem;
-        line-height: 1.5;
-    }
-
-    .sidebar .skill-category h4 {
-        font-size: 0.95rem;
-    }
-
-    .sidebar .badge {
-        font-size: 0.8rem;
     }
 
     .info-section {
-        background-color: #ffffff;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
+        background-color: var(--background-color);
+        border: 2px solid var(--border-color);
     }
 
     .nav-tabs {
-        border-bottom: none;
-        background-color: #f8f9fa;
-        padding: 10px 10px 0;
-    }
-
-    .nav-tabs .nav-link {
-        border: none;
-        color: #495057;
-        font-weight: 500;
-        padding: 10px 15px;
-        border-radius: 5px 5px 0 0;
-        transition: all 0.3s ease;
-    }
-
-    .nav-tabs .nav-link:hover {
-        background-color: #e9ecef;
+        background-color: var(--sidebar-bg-color);
     }
 
     .nav-tabs .nav-link.active {
         color: var(--primary-color);
-        background-color: #ffffff;
+        background-color: var(--background-color);
         border-bottom: 2px solid var(--primary-color);
     }
 
-    .tab-content {
-        padding: 20px;
-    }
-
     .info-card {
-        background-color: #f8f9fa;
-        border-radius: 5px;
-        padding: 15px;
-        margin-bottom: 10px;
+        background-color: var(--sidebar-bg-color);
+        border: 1px solid var(--border-color);
     }
 
     .info-card h4 {
-        color: var(--primary-color);
-        font-size: 1.1rem;
-        margin-bottom: 5px;
-    }
-
-    .info-card p {
-        font-size: 0.9rem;
-        margin-bottom: 5px;
+        color: var(--text-color);
     }
 
     .skill-category h5 {
-        color: var(--primary-color);
-        font-size: 1rem;
-        margin-bottom: 10px;
+        color: var(--text-color);
     }
 
-    .skill-tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 5px;
+    /* Additional high contrast styles */
+    a {
+        color: var(--text-color);
+        text-decoration: underline;
     }
 
-    .skill-tag {
-        background-color: rgba(var(--primary-color-rgb), 0.1);
+    a:hover {
         color: var(--primary-color);
-        font-size: 0.8rem;
-        padding: 5px 10px;
-        border-radius: 15px;
+    }
+
+    .card, .btn, .form-control, .nav-pills, .info-card, .skill-tag {
+        box-shadow: 3px 3px 0 var(--border-color);
+    }
+
+    .btn:hover, .card:hover, .contact-form:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 5px 5px 0 var(--border-color);
+    }
+
+    /* Ensure text remains visible during webfont load */
+    .wf-loading body {
+        visibility: hidden;
+    }
+    
+    .project-card {
+        border: 2px solid var(--border-color);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .project-card:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 5px 5px 0 var(--border-color);
+    }
+
+    .profile-section .btn {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+    }
+
+    .profile-section .btn-outline-primary {
+        color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .profile-section .btn-outline-primary:hover {
+        color: var(--secondary-color);
+        background-color: var(--primary-color);
+    }
+
+    .blog-card {
+        border: 2px solid var(--border-color);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .blog-card:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 5px 5px 0 var(--border-color);
     }
 </style>
 {% endblock %}

@@ -30,24 +30,24 @@
     <style>
         :root {
             --bg-color: #ffffff;
-            --text-color: #333;
-            --navbar-bg: #f8f9fa;
-            --navbar-border: #e9ecef;
-            --link-color: #007bff;
-            --footer-bg: #f8f9fa;
+            --text-color: #000000;
+            --navbar-bg: #ffffff;
+            --navbar-border: #000000;
+            --link-color: #000000;
+            --footer-bg: #ffffff;
             --content-bg: #ffffff;
-            --link-color-rgb: 0, 123, 255;
+            --border-color: #000000;
         }
         
         body.dark-mode {
-            --bg-color: #1a1a1a;
-            --text-color: #f0f0f0;
-            --navbar-bg: #2c2c2c;
-            --navbar-border: #444;
-            --link-color: #4da3ff;
-            --footer-bg: #2c2c2c;
-            --content-bg: #2c2c2c;
-            --link-color-rgb: 77, 163, 255;
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --navbar-bg: #000000;
+            --navbar-border: #ffffff;
+            --link-color: #ffffff;
+            --footer-bg: #000000;
+            --content-bg: #000000;
+            --border-color: #ffffff;
         }
 
         body {
@@ -58,12 +58,12 @@
         }
         .navbar {
             background-color: var(--navbar-bg);
-            border-bottom: 1px solid var(--navbar-border);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-bottom: 2px solid var(--navbar-border);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .navbar-brand {
             font-weight: bold;
-            color: var(--link-color) !important;
+            color: var(--text-color) !important;
             font-size: 1.2rem;
             font-weight: 600;
             letter-spacing: 0.5px;
@@ -81,12 +81,12 @@
         }
         .nav-link:hover {
             color: var(--link-color) !important;
-            background-color: rgba(var(--link-color-rgb), 0.08);
+            background-color: var(--navbar-border);
         }
         .footer {
             background-color: var(--footer-bg);
             color: var(--text-color);
-            border-top: 1px solid var(--navbar-border);
+            border-top: 2px solid var(--navbar-border);
         }
         .content-wrapper {
             background-color: var(--content-bg);
@@ -95,20 +95,48 @@
         .card {
             background-color: var(--content-bg);
             color: var(--text-color);
-            border-color: var(--navbar-border);
+            border: 2px solid var(--border-color);
+            box-shadow: 4px 4px 0 var(--border-color);
         }
         .alert {
             background-color: var(--content-bg);
             color: var(--text-color);
-            border-color: var(--navbar-border);
+            border: 2px solid var(--border-color);
         }
         a {
             color: var(--link-color);
+            text-decoration: underline;
+        }
+        a:hover {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+        .btn {
+            border: 2px solid var(--border-color);
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            box-shadow: 3px 3px 0 var(--border-color);
+        }
+        .btn:hover {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0 var(--border-color);
+        }
+        .form-control {
+            border: 2px solid var(--border-color);
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+        .form-control:focus {
+            border-color: var(--text-color);
+            box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.25);
         }
         /* Add these new styles */
         img {
             max-width: 100%;
             height: auto;
+            border: 2px solid var(--border-color);
         }
         .research-content img,
         .blog-content img,
@@ -120,17 +148,16 @@
             cursor: pointer;
             padding: 0.4rem;
             background-color: var(--navbar-bg);
-            border: 1px solid var(--navbar-border);
+            border: 2px solid var(--navbar-border);
             color: var(--text-color);
             border-radius: 5px;
-            background: none;
-            border: none;
             font-size: 1rem;
             margin-left: 0.2rem;
             transition: color 0.2s ease;
         }
         .dark-mode-toggle:hover {
-            color: var(--link-color);
+            background-color: var(--text-color);
+            color: var(--bg-color);
         }
         .search-link {
             padding: 0.5rem 0.6rem !important;
