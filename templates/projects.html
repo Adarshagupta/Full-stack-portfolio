@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}All Projects - Adarsh Gupta{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">All Projects</h1>
+    <div class="row">
+        {% for project in projects %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ project.title }}</h5>
+                    {% if project.description %}
+                        <p class="card-text">{{ project.description[:150] }}...</p>
+                    {% endif %}
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <a href="{{ url_for('view_project', project_id=project.id) }}" class="btn btn-primary btn-sm">View Project</a>
+                        <div class="project-links">
+                            {% if project.github_link %}
+                            <a href="{{ project.github_link }}" target="_blank" title="GitHub">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            {% endif %}
+                            {% if project.twitter_link %}
+                            <a href="{{ project.twitter_link }}" target="_blank" title="Twitter">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            {% endif %}
+                            {% if project.project_files_link %}
+                            <a href="{{ project.project_files_link }}" target="_blank" title="Project Files">
+                                <i class="fas fa-file-alt"></i>
+                            </a>
+                            {% endif %}
+                            {% if project.research_link %}
+                            <a href="{{ project.research_link }}" target="_blank" title="Research">
+                                <i class="fas fa-book"></i>
+                            </a>
+                            {% endif %}
+                            {% if project.live_demo_link %}
+                            <a href="{{ project.live_demo_link }}" target="_blank" title="Live Demo">
+                                <i class="fas fa-globe"></i>
+                            </a>
+                            {% endif %}
+                            {% if project.youtube_link %}
+                            <a href="{{ project.youtube_link }}" target="_blank" title="YouTube">
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                            {% endif %}
+                            {% if project.blog_post_link %}
+                            <a href="{{ project.blog_post_link }}" target="_blank" title="Blog Post">
+                                <i class="fas fa-blog"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% if project.date %}
+                <div class="card-footer text-muted">
+                    {{ project.date.strftime('%B %d, %Y') }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .project-links a {
+        color: var(--text-color);
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+        border: 1px solid var(--border-color);
+        border-radius: 50%;
+        width: 2.5rem;
+        height: 2.5rem;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 0.5rem;
+    }
+
+    .project-links a:hover {
+        color: var(--primary-color);
+        background-color: var(--bg-color);
+        transform: translateY(-3px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .project-links {
+        display: flex;
+        align-items: center;
+    }
+</style>
+{% endblock %}

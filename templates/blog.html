@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Blog - Adarsh Gupta{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Blog Posts</h1>
+    <div class="row">
+        {% for post in posts %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text">{{ post.content[:150] }}...</p>
+                    <a href="{{ url_for('view_blog', blog_id=post.id) }}" class="btn btn-primary">Read More</a>
+                </div>
+                <div class="card-footer text-muted">
+                    {{ post.created_at.strftime('%B %d, %Y') }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
