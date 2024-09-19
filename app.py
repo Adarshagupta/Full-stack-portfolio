@@ -26,6 +26,7 @@ from together import Together
 load_dotenv()
 
 
+
 # Set up the upload folder
 basedir = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_FOLDER = os.path.join(basedir, 'static', 'uploads')
