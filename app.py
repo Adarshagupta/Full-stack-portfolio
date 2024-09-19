@@ -664,6 +664,18 @@ def upgrade():
 def downgrade():
     op.drop_column('project', 'awards')
 
+@app.route('/projects')
+def projects():
+    # Fetch all projects from the database
+    all_projects = Project.query.all()
+    return render_template('projects.html', projects=all_projects)
+
+@app.route('/blog')
+def blog():
+    # Fetch all blog posts from the database
+    all_posts = Blog.query.filter_by(is_archived=False).order_by(Blog.created_at.desc()).all()
+    return render_template('blog.html', posts=all_posts)
+
 if __name__ == '__main__':
     with app.app_context():
         if not os.path.exists(app.config['UPLOAD_FOLDER']):
