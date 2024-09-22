@@ -26,14 +26,13 @@ from together import Together
 load_dotenv()
 
 
-
 # Set up the upload folder
 basedir = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_FOLDER = os.path.join(basedir, 'static', 'uploads')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
-app.config['SERVER_NAME'] = 'adarshgupta.onrender.com'  # Replace with your actual domain
+app.config['SERVER_NAME'] = 'aadarsha.onrender.com'  # Replace with your actual domain
 app.config['PREFERRED_URL_SCHEME'] = 'https'  # Or 'http' if you're not using HTTPS
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max-limit
