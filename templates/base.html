@@ -278,6 +278,54 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
+
+        .floating-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #ffffff;
+            color: #000000;
+            padding: 12px 24px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            border: 2px solid #000000;
+            font-size: 16px;
+            letter-spacing: 0.5px;
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        .floating-button:hover {
+            background-color: #000000;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        body.dark-mode .floating-button {
+            background-color: #000000;
+            color: #ffffff;
+            border-color: #ffffff;
+        }
+
+        body.dark-mode .floating-button:hover {
+            background-color: #ffffff;
+            color: #000000;
+            border-color: #000000;
+        }
+
+        @media (max-width: 768px) {
+            .floating-button {
+                bottom: 10px;
+                right: 10px;
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
     </style>
     {% block extra_css %}{% endblock %}
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
@@ -440,6 +488,23 @@
                 setDarkMode(e.matches);
             }
         });
+
+        // Animate the floating button
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const floatingButton = document.getElementById('floating-hire-me');
+            setTimeout(() => {
+                floatingButton.style.transform = 'translateY(0)';
+                floatingButton.style.opacity = '1';
+            }, 1000);
+
+            // Add a subtle hover animation
+            floatingButton.addEventListener('mouseover', () => {
+                floatingButton.style.transform = 'translateY(-5px) scale(1.05)';
+            });
+            floatingButton.addEventListener('mouseout', () => {
+                floatingButton.style.transform = 'translateY(0) scale(1)';
+            });
+        });
     </script>
     {% block extra_js %}{% endblock %}
     
@@ -504,5 +569,9 @@
             </div>
         </div>
     </div>
+
+    <a href="#" id="floating-hire-me" class="floating-button">
+        <i class="fas fa-handshake me-2"></i>Hire Me
+    </a>
 </body>
 </html>
