@@ -21,6 +21,8 @@ from markdown2 import Markdown
 import requests
 from apscheduler.schedulers.background import BackgroundScheduler
 from together import Together
+import hmac
+import atexit
 
 # Load environment variables
 load_dotenv()
@@ -154,7 +156,7 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
         user = User.query.filter_by(username=username).first()
-        if user and check_password_hash(user.password_hash, password):
+        if user and hmac.compare_digest(user.password_hash.encode('utf-8'), password.encode('utf-8')):
             login_user(user)
             return redirect(url_for('admin_dashboard'))
         flash('Invalid username or password')
@@ -675,6 +677,22 @@ def blog():
     # Fetch all blog posts from the database
     all_posts = Blog.query.filter_by(is_archived=False).order_by(Blog.created_at.desc()).all()
     return render_template('blog.html', posts=all_posts)
+
+# Function to ping the server
+def ping_server():
+    try:
+        response = requests.get('https://aadarsha.onrender.com/')
+        print(f"Ping successful: {response.status_code}")
+    except requests.RequestException as e:
+        print(f"Ping failed: {str(e)}")
+
+# Create the scheduler
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=ping_server, trigger="interval", minutes=2)
+scheduler.start()
+
+# Shut down the scheduler when exiting the app
+atexit.register(lambda: scheduler.shutdown())
 
 if __name__ == '__main__':
     with app.app_context():
