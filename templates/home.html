@@ -32,6 +32,11 @@
                             <a href="#contact" class="btn btn-primary btn-sm me-2">Get in Touch</a>
                             <a href="{{ url_for('static', filename='resume.pdf') }}" class="btn btn-outline-primary btn-sm" target="_blank">Resume</a>
                         </div>
+                        <div class="mt-2">
+                            <a href="https://www.buymeacoffee.com/yourusername" target="_blank" class="btn btn-warning btn-sm">
+                                <i class="fas fa-coffee me-1"></i> Buy Me a Coffee
+                            </a>
+                        </div>
                     </div>
                     
                     <div class="info-section p-3 rounded">
@@ -68,7 +73,7 @@
 
         <!-- Main Content -->
         <div class="col-lg-9 main-content">
-            <div class="container py-5">
+            <div class="container py-2">
                 <section id="about" class="mb-5">
                     <h2 class="h2 mb-4 text-primary">About Me</h2>
                     <div class="row g-4">
@@ -100,7 +105,10 @@
                 </section>
 
                 <section id="projects" class="mb-5">
-                    <h2 class="h2 mb-4 text-primary">Featured Projects</h2>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="h2 text-primary">Featured Projects</h2>
+                        <a href="{{ url_for('projects') }}" class="btn btn-outline-primary btn-sm">More Projects</a>
+                    </div>
                     <div class="row g-4">
                         {% for project in projects[:6] %}
                         <div class="col-md-6 col-lg-4">
@@ -160,7 +168,10 @@
                     </div>
                 </section>
                 <section id="blog" class="mb-5">
-                    <h2 class="h2 mb-4 text-primary">Latest Blog Posts</h2>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="h2 text-primary">Latest Blog Posts</h2>
+                        <a href="{{ url_for('blog') }}" class="btn btn-outline-primary btn-sm">More Posts</a>
+                    </div>
                     <div class="row g-4">
                         {% for blog in blogs[:4] %}
                         <div class="col-md-6">
@@ -224,14 +235,17 @@
 
     .sidebar {
         position: fixed;
+        padding-top: 4rem;
         top: 0;
         bottom: 0;
+        margin-top: 50px;
         left: 0;
         width: 25%;
         overflow-y: auto;
         background-color: var(--sidebar-bg-color);
         border-right: 2px solid var(--border-color);
         padding: 2rem;
+        scrollbar-width: none;  /* Firefox */
         z-index: 1000;
     }
 
@@ -245,6 +259,10 @@
     @media (min-width: 992px) {
         .main-content {
             margin-left: 25%;
+        }
+
+        .main-content .container {
+            padding-top: 2rem;
         }
     }
 
@@ -343,11 +361,16 @@
     .btn-outline-primary {
         color: var(--text-color);
         border-color: var(--border-color);
+        background-color: transparent;
+        transition: all 0.3s ease;
     }
 
     .btn-outline-primary:hover {
-        background-color: var(--primary-color);
-        color: var(--secondary-color);
+        color: var(--bg-color);
+        background-color: var(--text-color);
+        border-color: var(--text-color);
+        transform: translateY(-2px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .form-control {
@@ -490,6 +513,22 @@
         font-size: 0.9rem;
         flex-grow: 1;
     }
+
+    .btn-warning {
+        background-color: #FFDD00;
+        border-color: #000000;
+        color: #000000;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .btn-warning:hover {
+        background-color: #FFE135;
+        border-color: #000000;
+        color: #000000;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
 </style>
 {% endblock %}
 
@@ -514,7 +553,6 @@
     });
 </script>
 
-<script src="https://chatcat-moo7.onrender.com/chatbot.js?api_key=user_8b0a8e4dba7c463ebc17f159fdaa7e61"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 {% endblock %}

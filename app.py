@@ -150,13 +150,15 @@ def home():
     projects = Project.query.filter_by(is_archived=False).all()
     return render_template('home.html', blogs=blogs, projects=projects)
 
+from werkzeug.security import check_password_hash
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
         user = User.query.filter_by(username=username).first()
-        if user and hmac.compare_digest(user.password_hash.encode('utf-8'), password.encode('utf-8')):
+        if user and check_password_hash(user.password_hash, password):
             login_user(user)
             return redirect(url_for('admin_dashboard'))
         flash('Invalid username or password')

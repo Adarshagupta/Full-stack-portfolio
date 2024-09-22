@@ -40,14 +40,15 @@
         }
         
         body.dark-mode {
-            --bg-color: #000000;
-            --text-color: #ffffff;
-            --navbar-bg: #000000;
-            --navbar-border: #ffffff;
-            --link-color: #ffffff;
-            --footer-bg: #000000;
-            --content-bg: #000000;
-            --border-color: #ffffff;
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --navbar-bg: #1e1e1e;
+            --navbar-border: #333333;
+            --link-color: #bb86fc;
+            --footer-bg: #1e1e1e;
+            --content-bg: #1e1e1e;
+            --border-color: #333333;
+            --card-bg: #2c2c2c;
         }
 
         body {
@@ -60,6 +61,8 @@
             background-color: var(--navbar-bg);
             border-bottom: 2px solid var(--navbar-border);
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
         }
         .navbar-brand {
             font-weight: bold;
@@ -145,19 +148,16 @@
             margin: 1em auto;
         }
         .dark-mode-toggle {
+            background: none;
+            border: none;
             cursor: pointer;
-            padding: 0.4rem;
-            background-color: var(--navbar-bg);
-            border: 2px solid var(--navbar-border);
+            padding: 0;
             color: var(--text-color);
-            border-radius: 5px;
-            width: 50px;
-            font-size: 1rem;
-            transition: color 0.2s ease;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
         }
         .dark-mode-toggle:hover {
-            background-color: var(--text-color);
-            color: var(--bg-color);
+            color: var(--link-color);
         }
         .search-link {
             padding: 0.5rem 0.6rem !important;
@@ -207,6 +207,77 @@
             transform: translateY(-2px);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
+        .buy-coffee {
+            background-color: #FFDD00;
+            border-color: #000000;
+            color: #000000;
+            font-weight: bold;
+            padding: 0.375rem 0.75rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            border-radius: 0.25rem;
+            transition: all 0.15s ease-in-out;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+        .buy-coffee:hover {
+            background-color: #FFE135;
+            border-color: #000000;
+            color: #000000;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 991px) {
+            .navbar-nav .nav-item .schedule-meeting,
+            .navbar-nav .nav-item .buy-coffee {
+                margin: 10px 0;
+                display: inline-block;
+            }
+        }
+
+        body.dark-mode .navbar {
+            background-color: var(--navbar-bg);
+        }
+
+        body.dark-mode .card {
+            background-color: var(--card-bg);
+        }
+
+        body.dark-mode .btn-primary {
+            background-color: #bb86fc;
+            border-color: #bb86fc;
+            color: #000000;
+        }
+
+        body.dark-mode .btn-primary:hover {
+            background-color: #a370f7;
+            border-color: #a370f7;
+        }
+
+        body.dark-mode .btn-warning {
+            background-color: #ffb300;
+            border-color: #ffb300;
+            color: #000000;
+        }
+
+        body.dark-mode .btn-warning:hover {
+            background-color: #ffa000;
+            border-color: #ffa000;
+        }
+
+        .models-badge {
+            background: linear-gradient(45deg, hsl(239, 100%, 81%) 0%, #fad0c4 99%, #fad0c4 100%);
+            color: #000;
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 0.25em 0.6em;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
     </style>
     {% block extra_css %}{% endblock %}
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
@@ -219,8 +290,9 @@
 <body>
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="{{ url_for('home') }}">
-                <i class="fas fa-code"></i> Adarsh Gupta
+            <a class="navbar-brand d-flex align-items-center" href="{{ url_for('home') }}">
+                <i class="fas fa-code me-2"></i> Adarsh Gupta
+                <span class="models-badge ms-2">Models</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -256,6 +328,11 @@
                     <li class="nav-item">
                         <a class="btn btn-primary schedule-meeting" href="https://cal.com/adarsh-gupta-8dznuw/meeting" target="_blank">
                             Schedule a Meeting
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-warning buy-coffee" href="https://www.buymeacoffee.com/yourusername" target="_blank">
+                            <i class="fas fa-coffee me-1"></i> Buy Me a Coffee
                         </a>
                     </li>
                     <li class="nav-item">
@@ -311,25 +388,46 @@
         mermaid.initialize({startOnLoad:true});
     </script>
     <script>
-        // Dark mode toggle functionality
+        // Dark mode functionality
         const darkModeToggle = document.getElementById('darkModeToggle');
         const body = document.body;
         const icon = darkModeToggle.querySelector('i');
 
-        // Check for saved dark mode preference
-        if (localStorage.getItem('darkMode') === 'enabled') {
-            body.classList.add('dark-mode');
-            icon.classList.replace('fa-moon', 'fa-sun');
+        // Function to set the dark mode state
+        function setDarkMode(isDark) {
+            if (isDark) {
+                body.classList.add('dark-mode');
+                icon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                body.classList.remove('dark-mode');
+                icon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('darkMode', null);
+            }
         }
 
+        // Check for saved user preference
+        const savedDarkMode = localStorage.getItem('darkMode');
+
+        // Check for system preference
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+        // Set initial state based on saved preference or system preference
+        if (savedDarkMode === 'enabled') {
+            setDarkMode(true);
+        } else if (savedDarkMode === null && prefersDarkScheme.matches) {
+            setDarkMode(true);
+        }
+
+        // Toggle dark mode on button click
         darkModeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            if (body.classList.contains('dark-mode')) {
-                localStorage.setItem('darkMode', 'enabled');
-                icon.classList.replace('fa-moon', 'fa-sun');
-            } else {
-                localStorage.setItem('darkMode', null);
-                icon.classList.replace('fa-sun', 'fa-moon');
+            setDarkMode(!body.classList.contains('dark-mode'));
+        });
+
+        // Listen for changes in system preference
+        prefersDarkScheme.addListener((e) => {
+            if (localStorage.getItem('darkMode') === null) {
+                setDarkMode(e.matches);
             }
         });
     </script>
