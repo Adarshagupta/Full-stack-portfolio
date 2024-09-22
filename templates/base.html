@@ -286,6 +286,15 @@
             mermaid.initialize({ startOnLoad: true });
         });
     </script>
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='images/profile.jpg') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/profile.jpg') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='images/profile.jpg') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='images/profile.jpg') }}">
+    <link rel="mask-icon" href="{{ url_for('static', filename='images/profile.jpg') }}" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg sticky-top">
@@ -331,7 +340,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-warning buy-coffee" href="https://www.buymeacoffee.com/yourusername" target="_blank">
+                        <a class="btn btn-warning buy-coffee" href="https://buymeacoffee.com/gptadarsh10" target="_blank">
                             <i class="fas fa-coffee me-1"></i> Buy Me a Coffee
                         </a>
                     </li>
