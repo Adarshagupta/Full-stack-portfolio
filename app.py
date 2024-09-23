@@ -140,6 +140,18 @@ class Feedback(db.Model):
     project = db.relationship('Project', backref=db.backref('feedbacks', lazy=True))
     research = db.relationship('Research', backref=db.backref('feedbacks', lazy=True))
 
+class Dataset(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    download_link = db.Column(db.String(255), nullable=False)
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    is_archived = db.Column(db.Boolean, default=False)
+
+    def render_description(self):
+        return markdown.markdown(self.description, extensions=['fenced_code', MermaidExtension()])
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -176,7 +188,8 @@ def admin_dashboard():
     blogs = Blog.query.all()
     projects = Project.query.all()
     research_items = Research.query.all()
-    return render_template('admin_dashboard.html', blogs=blogs, projects=projects, research_items=research_items)
+    datasets = Dataset.query.all()
+    return render_template('admin_dashboard.html', blogs=blogs, projects=projects, research_items=research_items, datasets=datasets)
 
 @app.route('/admin/blog/new', methods=['GET', 'POST'])
 @login_required
@@ -537,6 +550,15 @@ def update_sitemap():
     add_url(root, '/about', changefreq="monthly", priority="0.5", description="Learn more about my background, skills, and experience as a full-stack developer.")
     add_url(root, url_for('contact', _external=True), changefreq="monthly", priority="0.5", description="Get in touch with me for collaboration opportunities or to discuss your project ideas.")
 
+    # Add datasets
+    datasets = Dataset.query.filter_by(is_archived=False).all()
+    for dataset in datasets:
+        add_url(root, url_for('view_dataset', dataset_id=dataset.id, _external=True),
+                lastmod=dataset.created_at,
+                changefreq="monthly",
+                priority="0.7",
+                description=f"Download and explore the {dataset.title} dataset.")
+
     # Save the sitemap
     xml_str = minidom.parseString(ET.tostring(root)).toprettyxml(indent="  ")
     with open("sitemap.xml", "w", encoding="utf-8") as f:
@@ -695,6 +717,66 @@ scheduler.start()
 
 # Shut down the scheduler when exiting the app
 atexit.register(lambda: scheduler.shutdown())
+
+@app.route('/admin/dataset/new', methods=['GET', 'POST'])
+@login_required
+def new_dataset():
+    if request.method == 'POST':
+        title = request.form.get('title')
+        description = request.form.get('description')
+        download_link = request.form.get('download_link')
+        new_dataset = Dataset(title=title, description=description, download_link=download_link, author_id=current_user.id)
+        db.session.add(new_dataset)
+        db.session.commit()
+        update_sitemap()
+        flash('Dataset added successfully', 'success')
+        return redirect(url_for('admin_dashboard'))
+    return render_template('new_dataset.html')
+
+@app.route('/admin/dataset/<int:dataset_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_dataset(dataset_id):
+    dataset = Dataset.query.get_or_404(dataset_id)
+    if request.method == 'POST':
+        dataset.title = request.form.get('title')
+        dataset.description = request.form.get('description')
+        dataset.download_link = request.form.get('download_link')
+        db.session.commit()
+        update_sitemap()
+        flash('Dataset updated successfully', 'success')
+        return redirect(url_for('admin_dashboard'))
+    return render_template('new_dataset.html', dataset=dataset)
+
+@app.route('/admin/dataset/<int:dataset_id>/delete', methods=['POST'])
+@login_required
+def delete_dataset(dataset_id):
+    dataset = Dataset.query.get_or_404(dataset_id)
+    db.session.delete(dataset)
+    db.session.commit()
+    update_sitemap()
+    flash('Dataset deleted successfully', 'success')
+    return redirect(url_for('admin_dashboard'))
+
+@app.route('/admin/dataset/<int:dataset_id>/archive', methods=['POST'])
+@login_required
+def archive_dataset(dataset_id):
+    dataset = Dataset.query.get_or_404(dataset_id)
+    dataset.is_archived = not dataset.is_archived
+    db.session.commit()
+    update_sitemap()
+    action = 'archived' if dataset.is_archived else 'unarchived'
+    flash(f'Dataset {action} successfully', 'success')
+    return redirect(url_for('admin_dashboard'))
+
+@app.route('/datasets')
+def datasets():
+    datasets = Dataset.query.filter_by(is_archived=False).order_by(Dataset.created_at.desc()).all()
+    return render_template('datasets.html', datasets=datasets)
+
+@app.route('/dataset/<int:dataset_id>')
+def view_dataset(dataset_id):
+    dataset = Dataset.query.get_or_404(dataset_id)
+    return render_template('view_dataset.html', dataset=dataset)
 
 if __name__ == '__main__':
     with app.app_context():

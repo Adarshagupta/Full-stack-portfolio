@@ -116,4 +116,11 @@ The AI Book Generator is a powerful web application that leverages AI models fro
     <priority>0.5</priority>
     <description>Get in touch with me for collaboration opportunities or to discuss your project ideas.</description>
   </url>
+  <url>
+    <loc>https://aadarsha.onrender.com/dataset/1</loc>
+    <lastmod>2024-09-23T04:51:41.961632+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <description>Download and explore the Diabetes Dataset dataset.</description>
+  </url>
 </urlset>

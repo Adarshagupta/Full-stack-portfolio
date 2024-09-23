@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Datasets</h2>
+    <div class="row">
+        {% for dataset in datasets %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ dataset.title }}</h5>
+                    <p class="card-text">{{ dataset.description | truncate(100) }}</p>
+                    <a href="{{ url_for('view_dataset', dataset_id=dataset.id) }}" class="btn btn-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
