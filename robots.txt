@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://my-portfolio-website-hbsc.onrender.com/sitemap.xml
+Sitemap: https://adarshgpt.onrender.com/sitemap.xml

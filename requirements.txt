@@ -24,3 +24,7 @@ together
 # Additional packages based on your imports
 urllib3
 lxml
+
+# Google Cloud SQL packages for IAM authentication
+google-cloud-sql-python-connector[pg8000]
+pg8000

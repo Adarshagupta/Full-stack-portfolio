@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://my-portfolio-website-hbsc.onrender.com/</loc>
+    <loc>https://adarshgpt.onrender.com/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <description>Welcome to my full-stack developer portfolio showcasing my projects, blog posts, and research.</description>
@@ -13,7 +13,7 @@
     <description>Learn more about my background, skills, and experience as a full-stack developer.</description>
   </url>
   <url>
-    <loc>https://my-portfolio-website-hbsc.onrender.com/contact</loc>
+    <loc>https://adarshgpt.onrender.com/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
     <description>Get in touch with me for collaboration opportunities or to discuss your project ideas.</description>
