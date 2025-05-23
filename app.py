@@ -23,6 +23,9 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from together import Together
 import hmac
 import atexit
+from PIL import Image
+import io
+import functools
 
 # Load environment variables
 load_dotenv()
@@ -41,6 +44,40 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max-limit
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Performance Optimizations - Simple in-memory cache for development
+# For production, use Redis: pip install flask-caching redis
+app.config['CACHE_TYPE'] = 'simple'
+app.config['CACHE_DEFAULT_TIMEOUT'] = 300  # 5 minutes
+
+# Simple cache implementation without flask-caching dependency
+_cache = {}
+_cache_timeout = {}
+
+def cache_key(*args, **kwargs):
+    """Generate cache key from arguments."""
+    return str(hash(str(args) + str(sorted(kwargs.items()))))
+
+def cached(timeout=300):
+    """Simple cache decorator."""
+    def decorator(f):
+        @functools.wraps(f)
+        def wrapper(*args, **kwargs):
+            key = f.__name__ + '_' + cache_key(*args, **kwargs)
+            now = datetime.utcnow().timestamp()
+            
+            # Check if cached and not expired
+            if key in _cache and key in _cache_timeout:
+                if now < _cache_timeout[key]:
+                    return _cache[key]
+            
+            # Execute function and cache result
+            result = f(*args, **kwargs)
+            _cache[key] = result
+            _cache_timeout[key] = now + timeout
+            return result
+        return wrapper
+    return decorator
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -78,22 +115,24 @@ class User(UserMixin, db.Model):
 
 class Blog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
+    title = db.Column(db.String(100), nullable=False, index=True)
     content = db.Column(db.Text, nullable=False)
-    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    is_archived = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, index=True)
+    is_archived = db.Column(db.Boolean, default=False, index=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, index=True)
+
+    author = db.relationship('User', backref=db.backref('blogs', lazy=True))
 
     def render_content(self):
         return markdown.markdown(self.content, extensions=['fenced_code', MermaidExtension()])
 
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
+    title = db.Column(db.String(100), nullable=False, index=True)
     description = db.Column(db.Text, nullable=False)
     description_html = db.Column(db.Text)
-    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    is_archived = db.Column(db.Boolean, default=False)
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, index=True)
+    is_archived = db.Column(db.Boolean, default=False, index=True)
     github_link = db.Column(db.String(255))
     twitter_link = db.Column(db.String(255))
     project_files_link = db.Column(db.String(255))
@@ -104,7 +143,7 @@ class Project(db.Model):
     cover_image_data = db.Column(db.LargeBinary)  # Store actual image data
     cover_image_filename = db.Column(db.String(255))  # Store original filename
     cover_image_mimetype = db.Column(db.String(100))  # Store MIME type
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, index=True)
     tech_used = db.Column(db.Text)
     awards = db.Column(db.Text)
     achievements = db.Column(db.Text)
@@ -126,11 +165,13 @@ class Project(db.Model):
 
 class Research(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
+    title = db.Column(db.String(100), nullable=False, index=True)
     content = db.Column(db.Text, nullable=False)
-    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    is_archived = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, index=True)
+    is_archived = db.Column(db.Boolean, default=False, index=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, index=True)
+
+    author = db.relationship('User', backref=db.backref('research_items', lazy=True))
 
     def render_content(self):
         return markdown.markdown(self.content, extensions=['fenced_code', MermaidExtension()])
@@ -149,12 +190,14 @@ class Feedback(db.Model):
 
 class Dataset(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
+    title = db.Column(db.String(100), nullable=False, index=True)
     description = db.Column(db.Text, nullable=False)
     download_link = db.Column(db.String(255), nullable=False)
-    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    is_archived = db.Column(db.Boolean, default=False)
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, index=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, index=True)
+    is_archived = db.Column(db.Boolean, default=False, index=True)
+
+    author = db.relationship('User', backref=db.backref('datasets', lazy=True))
 
     def render_description(self):
         return markdown.markdown(self.description, extensions=['fenced_code', MermaidExtension()])
@@ -164,9 +207,17 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 @app.route('/')
+@cached(timeout=300)  # Cache for 5 minutes
 def home():
-    blogs = Blog.query.filter_by(is_archived=False).all()
-    projects = Project.query.filter_by(is_archived=False).all()
+    # Simplified queries without eager loading for better performance
+    blogs = Blog.query.filter_by(
+        is_archived=False
+    ).order_by(Blog.created_at.desc()).limit(4).all()
+    
+    projects = Project.query.filter_by(
+        is_archived=False
+    ).order_by(Project.created_at.desc()).limit(6).all()
+    
     return render_template('home.html', blogs=blogs, projects=projects)
 
 from werkzeug.security import check_password_hash
@@ -252,12 +303,18 @@ def new_project():
             file = request.files['cover_image']
             if file and allowed_file(file.filename):
                 try:
-                    # Read the file data and store in database
-                    image_data = file.read()
-                    new_project.cover_image_data = image_data
+                    # Read the file data
+                    original_data = file.read()
+                    
+                    # Compress the image
+                    compressed_data, compressed_mimetype = compress_image(original_data)
+                    
+                    # Store compressed image in database
+                    new_project.cover_image_data = compressed_data
                     new_project.cover_image_filename = secure_filename(file.filename)
-                    new_project.cover_image_mimetype = file.mimetype
-                    print(f"Stored image in database: {file.filename}, size: {len(image_data)} bytes")
+                    new_project.cover_image_mimetype = compressed_mimetype or file.mimetype
+                    
+                    print(f"Stored compressed image: {file.filename}, final size: {len(compressed_data)} bytes")
                 except Exception as e:
                     flash(f'Error saving file: {str(e)}', 'error')
                     print(f'Error saving file: {str(e)}')
@@ -302,12 +359,18 @@ def edit_project(project_id):
             file = request.files['cover_image']
             if file and allowed_file(file.filename):
                 try:
-                    # Read the file data and store in database
-                    image_data = file.read()
-                    project.cover_image_data = image_data
+                    # Read the file data
+                    original_data = file.read()
+                    
+                    # Compress the image
+                    compressed_data, compressed_mimetype = compress_image(original_data)
+                    
+                    # Store compressed image in database
+                    project.cover_image_data = compressed_data
                     project.cover_image_filename = secure_filename(file.filename)
-                    project.cover_image_mimetype = file.mimetype
-                    print(f"Stored image in database: {file.filename}, size: {len(image_data)} bytes")
+                    project.cover_image_mimetype = compressed_mimetype or file.mimetype
+                    
+                    print(f"Stored compressed image: {file.filename}, final size: {len(compressed_data)} bytes")
                 except Exception as e:
                     flash(f'Error saving file: {str(e)}', 'error')
                     print(f'Error saving file: {str(e)}')
@@ -380,10 +443,28 @@ def view_blog(blog_id):
     share_text = quote(f"Check out this blog post: {blog.title}")
     return render_template('view_blog.html', blog=blog, share_url=share_url, share_text=share_text)
 
+@cached(timeout=600)  # Cache for 10 minutes
+def get_project_data(project_id):
+    """Get project data with feedbacks - cached separately."""
+    project = Project.query.filter_by(
+        id=project_id, 
+        is_archived=False
+    ).first()
+    
+    if not project:
+        return None
+    
+    # Get feedbacks separately for better caching
+    feedbacks = Feedback.query.filter_by(
+        project_id=project_id
+    ).order_by(Feedback.created_at.desc()).limit(10).all()
+    
+    return project, feedbacks
+
 @app.route('/project/<int:project_id>', methods=['GET', 'POST'])
 def view_project(project_id):
-    project = Project.query.get_or_404(project_id)
     if request.method == 'POST':
+        # Handle feedback submission (not cached)
         name = request.form.get('name')
         email = request.form.get('email')
         content = request.form.get('content')
@@ -391,13 +472,28 @@ def view_project(project_id):
             feedback = Feedback(name=name, email=email, content=content, project_id=project_id)
             db.session.add(feedback)
             db.session.commit()
+            # Clear cache for this project
+            cache_key_to_clear = f"get_project_data_{project_id}"
+            if cache_key_to_clear in _cache:
+                del _cache[cache_key_to_clear]
             flash('Thank you for your feedback!', 'success')
         else:
             flash('Please fill out all fields.', 'error')
         return redirect(url_for('view_project', project_id=project_id))
+    
+    # Use cached project data for GET requests
+    project_data = get_project_data(project_id)
+    if not project_data:
+        abort(404)
+    
+    project, feedbacks = project_data
     share_url = quote(url_for('view_project', project_id=project.id, _external=True))
     share_text = quote(f"Check out this project: {project.title}")
-    return render_template('view_project.html', project=project, share_url=share_url, share_text=share_text)
+    
+    return render_template('view_project.html', 
+                         project=project, 
+                         share_url=share_url, 
+                         share_text=share_text)
 
 @app.route('/research')
 def research():
@@ -700,16 +796,52 @@ def downgrade():
     op.drop_column('project', 'awards')
 
 @app.route('/projects')
+@cached(timeout=600)  # Cache for 10 minutes
 def projects():
-    # Fetch all projects from the database
-    all_projects = Project.query.all()
+    # Simplified query for better performance
+    page = request.args.get('page', 1, type=int)
+    per_page = 12  # Limit results
+    
+    projects_query = Project.query.filter_by(
+        is_archived=False
+    ).order_by(Project.created_at.desc())
+    
+    # For now, just get all projects (pagination can be added later)
+    all_projects = projects_query.all()
+    
     return render_template('projects.html', projects=all_projects)
 
 @app.route('/blog')
+@cached(timeout=600)  # Cache for 10 minutes  
 def blog():
-    # Fetch all blog posts from the database
-    all_posts = Blog.query.filter_by(is_archived=False).order_by(Blog.created_at.desc()).all()
+    # Simplified query for better performance
+    page = request.args.get('page', 1, type=int)
+    per_page = 10
+    
+    posts_query = Blog.query.filter_by(
+        is_archived=False
+    ).order_by(Blog.created_at.desc())
+    
+    # For now, just get all posts (pagination can be added later)
+    all_posts = posts_query.all()
+    
     return render_template('blog.html', posts=all_posts)
+
+# Add compression headers to all responses
+@app.after_request
+def after_request(response):
+    # Enable compression for text responses
+    if response.content_type.startswith('text/') or \
+       response.content_type.startswith('application/json') or \
+       response.content_type.startswith('application/javascript'):
+        response.headers['Vary'] = 'Accept-Encoding'
+    
+    # Add caching headers for static content
+    if request.endpoint == 'static':
+        response.cache_control.max_age = 86400  # 24 hours
+        response.cache_control.public = True
+    
+    return response
 
 # Add a simple ping endpoint
 @app.route('/ping')
@@ -801,21 +933,66 @@ def view_dataset(dataset_id):
     dataset = Dataset.query.get_or_404(dataset_id)
     return render_template('view_dataset.html', dataset=dataset)
 
-# Add a route to serve project images from database
+# Add a route to serve project images from database with caching
 @app.route('/project/<int:project_id>/image')
 def serve_project_image(project_id):
-    project = Project.query.get_or_404(project_id)
-    if not project.cover_image_data:
+    # Only load the image data fields, not the entire project
+    project = db.session.query(
+        Project.id, 
+        Project.cover_image_data, 
+        Project.cover_image_filename, 
+        Project.cover_image_mimetype
+    ).filter_by(id=project_id).first()
+    
+    if not project or not project.cover_image_data:
         abort(404)
+    
+    # Add ETag for better caching
+    etag = f'"{project_id}-{len(project.cover_image_data)}"'
+    
+    # Check if client has cached version
+    if request.headers.get('If-None-Match') == etag:
+        return '', 304
     
     return Response(
         project.cover_image_data,
         mimetype=project.cover_image_mimetype or 'image/jpeg',
         headers={
             'Content-Disposition': f'inline; filename="{project.cover_image_filename}"',
-            'Cache-Control': 'public, max-age=3600'  # Cache for 1 hour
+            'Cache-Control': 'public, max-age=86400',  # Cache for 24 hours
+            'ETag': etag,
+            'Content-Length': str(len(project.cover_image_data))
         }
     )
+
+def compress_image(image_data, max_size=(800, 600), quality=85):
+    """Compress and resize image to reduce file size."""
+    try:
+        # Open image from bytes
+        image = Image.open(io.BytesIO(image_data))
+        
+        # Convert RGBA to RGB if necessary
+        if image.mode in ('RGBA', 'LA', 'P'):
+            background = Image.new('RGB', image.size, (255, 255, 255))
+            if image.mode == 'P':
+                image = image.convert('RGBA')
+            background.paste(image, mask=image.split()[-1] if image.mode == 'RGBA' else None)
+            image = background
+        
+        # Resize image while maintaining aspect ratio
+        image.thumbnail(max_size, Image.Resampling.LANCZOS)
+        
+        # Save compressed image to bytes
+        output = io.BytesIO()
+        image.save(output, format='JPEG', quality=quality, optimize=True)
+        compressed_data = output.getvalue()
+        
+        print(f"Compressed image: {len(image_data)} bytes -> {len(compressed_data)} bytes ({len(compressed_data)/len(image_data)*100:.1f}%)")
+        return compressed_data, 'image/jpeg'
+        
+    except Exception as e:
+        print(f"Error compressing image: {str(e)}")
+        return image_data, None
 
 if __name__ == '__main__':
     with app.app_context():

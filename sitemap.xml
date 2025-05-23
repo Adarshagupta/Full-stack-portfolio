@@ -12,6 +12,10 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <description>TryBookAI - AI Book Generator: The AI Book Generator is a powerful web application that leverages AI models from OpenAI and Together to generate detailed books on a wide range of to</description>
+    <image:image>
+      <image:loc>https://adarshgpt.onrender.com/project/2/image</image:loc>
+      <image:caption>TryBookAI - AI Book Generator</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://adarshgpt.onrender.com/project/1</loc>
