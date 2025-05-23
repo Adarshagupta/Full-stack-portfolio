@@ -702,21 +702,35 @@ def blog():
     all_posts = Blog.query.filter_by(is_archived=False).order_by(Blog.created_at.desc()).all()
     return render_template('blog.html', posts=all_posts)
 
+# Add a simple ping endpoint
+@app.route('/ping')
+def ping():
+    return jsonify({'status': 'alive', 'timestamp': datetime.utcnow().isoformat()})
+
 # Function to ping the server
 def ping_server():
     try:
-        response = requests.get('https://aadarsha.onrender.com/')
-        print(f"Ping successful: {response.status_code}")
+        # Try to ping your actual domain first, fallback to localhost in development
+        if os.getenv('FLASK_ENV') == 'production':
+            url = 'https://adarshgpt.onrender.com/ping'
+        else:
+            url = 'http://127.0.0.1:5000/ping'
+        
+        response = requests.get(url, timeout=30)
+        print(f"Keep-alive ping successful: {response.status_code}")
     except requests.RequestException as e:
-        print(f"Ping failed: {str(e)}")
+        print(f"Keep-alive ping failed: {str(e)}")
 
-# Create the scheduler
-scheduler = BackgroundScheduler()
-scheduler.add_job(func=ping_server, trigger="interval", minutes=2)
-scheduler.start()
+# Create the scheduler only in production
+if os.getenv('FLASK_ENV') == 'production':
+    scheduler = BackgroundScheduler()
+    # Ping every 10 minutes to prevent Render free tier from sleeping (sleeps after 15 minutes of inactivity)
+    scheduler.add_job(func=ping_server, trigger="interval", minutes=10)
+    scheduler.start()
+    print("Keep-alive scheduler started - pinging every 10 minutes")
 
-# Shut down the scheduler when exiting the app
-atexit.register(lambda: scheduler.shutdown())
+    # Shut down the scheduler when exiting the app
+    atexit.register(lambda: scheduler.shutdown())
 
 @app.route('/admin/dataset/new', methods=['GET', 'POST'])
 @login_required

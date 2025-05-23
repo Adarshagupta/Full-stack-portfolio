@@ -7,6 +7,20 @@
     <description>Welcome to my full-stack developer portfolio showcasing my projects, blog posts, and research.</description>
   </url>
   <url>
+    <loc>https://adarshgpt.onrender.com/project/2</loc>
+    <lastmod>2025-05-23T11:50:44.215074+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <description>TryBookAI - AI Book Generator: The AI Book Generator is a powerful web application that leverages AI models from OpenAI and Together to generate detailed books on a wide range of to</description>
+  </url>
+  <url>
+    <loc>https://adarshgpt.onrender.com/project/1</loc>
+    <lastmod>2025-05-23T11:48:07.021719+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <description>Infin8t.tech | AI poweredCustomer Support Infrastructure for Businesse: Infin8t.tech is a state-of-the-art customer support infrastructure designed for businesses of all sizes. Our platform leverages cutting-edge AI techno</description>
+  </url>
+  <url>
     <loc>/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
