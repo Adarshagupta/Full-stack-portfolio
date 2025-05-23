@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, send_file
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, send_file, Response, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -98,12 +98,19 @@ class Project(db.Model):
     twitter_link = db.Column(db.String(255))
     project_files_link = db.Column(db.String(255))
     research_link = db.Column(db.String(255))
-    cover_image = db.Column(db.String(255))
+    live_demo_link = db.Column(db.String(255))
+    youtube_link = db.Column(db.String(255))
+    blog_post_link = db.Column(db.String(255))
+    cover_image_data = db.Column(db.LargeBinary)  # Store actual image data
+    cover_image_filename = db.Column(db.String(255))  # Store original filename
+    cover_image_mimetype = db.Column(db.String(100))  # Store MIME type
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     tech_used = db.Column(db.Text)
     awards = db.Column(db.Text)
     achievements = db.Column(db.Text)
     mermaid_chart = db.Column(db.Text)
+
+    author = db.relationship('User', backref=db.backref('projects', lazy=True))
 
     def render_description(self):
         return markdown.markdown(self.description, extensions=['fenced_code', MermaidExtension()])
@@ -244,13 +251,13 @@ def new_project():
         if 'cover_image' in request.files:
             file = request.files['cover_image']
             if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 try:
-                    if not os.path.exists(app.config['UPLOAD_FOLDER']):
-                        os.makedirs(app.config['UPLOAD_FOLDER'])
-                    file.save(file_path)
-                    new_project.cover_image = filename
+                    # Read the file data and store in database
+                    image_data = file.read()
+                    new_project.cover_image_data = image_data
+                    new_project.cover_image_filename = secure_filename(file.filename)
+                    new_project.cover_image_mimetype = file.mimetype
+                    print(f"Stored image in database: {file.filename}, size: {len(image_data)} bytes")
                 except Exception as e:
                     flash(f'Error saving file: {str(e)}', 'error')
                     print(f'Error saving file: {str(e)}')
@@ -294,16 +301,18 @@ def edit_project(project_id):
         if 'cover_image' in request.files:
             file = request.files['cover_image']
             if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 try:
-                    if not os.path.exists(app.config['UPLOAD_FOLDER']):
-                        os.makedirs(app.config['UPLOAD_FOLDER'])
-                    file.save(file_path)
-                    project.cover_image = filename
+                    # Read the file data and store in database
+                    image_data = file.read()
+                    project.cover_image_data = image_data
+                    project.cover_image_filename = secure_filename(file.filename)
+                    project.cover_image_mimetype = file.mimetype
+                    print(f"Stored image in database: {file.filename}, size: {len(image_data)} bytes")
                 except Exception as e:
                     flash(f'Error saving file: {str(e)}', 'error')
                     print(f'Error saving file: {str(e)}')
+            else:
+                flash('Invalid file type', 'error')
         
         db.session.commit()
         update_sitemap()
@@ -529,9 +538,9 @@ def update_sitemap():
                       description=f"{project.title}: {project.description[:150]}")
         
         # Add project image
-        if project.cover_image:
+        if project.cover_image_filename:
             image = ET.SubElement(url, "image:image")
-            ET.SubElement(image, "image:loc").text = url_for('static', filename=f'uploads/{project.cover_image}', _external=True)
+            ET.SubElement(image, "image:loc").text = url_for('serve_project_image', project_id=project.id, _external=True)
             ET.SubElement(image, "image:caption").text = project.title
         
         # Add project translations if available
@@ -791,6 +800,22 @@ def datasets():
 def view_dataset(dataset_id):
     dataset = Dataset.query.get_or_404(dataset_id)
     return render_template('view_dataset.html', dataset=dataset)
+
+# Add a route to serve project images from database
+@app.route('/project/<int:project_id>/image')
+def serve_project_image(project_id):
+    project = Project.query.get_or_404(project_id)
+    if not project.cover_image_data:
+        abort(404)
+    
+    return Response(
+        project.cover_image_data,
+        mimetype=project.cover_image_mimetype or 'image/jpeg',
+        headers={
+            'Content-Disposition': f'inline; filename="{project.cover_image_filename}"',
+            'Cache-Control': 'public, max-age=3600'  # Cache for 1 hour
+        }
+    )
 
 if __name__ == '__main__':
     with app.app_context():

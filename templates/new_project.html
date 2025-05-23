@@ -53,8 +53,11 @@
                 <div class="form-group mt-3">
                     <label for="cover_image">Cover Image</label>
                     <input type="file" class="form-control" id="cover_image" name="cover_image">
-                    {% if project and project.cover_image %}
-                    <img src="{{ url_for('static', filename='uploads/' + project.cover_image) }}" alt="Current cover image" class="mt-2 img-fluid">
+                    {% if project and project.cover_image_data %}
+                    <div class="mt-2">
+                        <p class="text-muted">Current image: {{ project.cover_image_filename }}</p>
+                        <img src="{{ url_for('serve_project_image', project_id=project.id) }}" alt="Current cover image" class="mt-2 img-fluid" style="max-width: 300px;">
+                    </div>
                     {% endif %}
                 </div>
                 <div class="form-group mt-3">

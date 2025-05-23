@@ -72,9 +72,9 @@
                 {% endif %}
 
                 <div class="project-card">
-                    {% if project.cover_image %}
+                    {% if project.cover_image_data %}
                     <div class="project-image-container mb-4">
-                        <img src="{{ url_for('static', filename='uploads/' + project.cover_image) }}" alt="{{ project.title }} cover image" class="img-fluid project-image">
+                        <img src="{{ url_for('serve_project_image', project_id=project.id) }}" alt="{{ project.title }} cover image" class="img-fluid project-image">
                     </div>
                     {% endif %}
                     <p class="text-muted">
@@ -476,7 +476,7 @@
     "codeRepository": "{{ project.github_link }}",
     {% endif %}
     "keywords": "{{ project.tech_used }}",
-    "image": "{{ url_for('static', filename='uploads/' + project.cover_image, _external=True) if project.cover_image else '' }}"
+    "image": "{{ url_for('serve_project_image', project_id=project.id, _external=True) if project.cover_image_data else '' }}"
 }
 </script>
 {% endblock %}
